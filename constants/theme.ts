@@ -25,6 +25,11 @@ export const Colors = {
     tabIconDefault: '#9BA1A6',
     tabIconSelected: tintColorDark,
   },
+  // Added standard brand gradient per request
+  gradient: {
+    start: '#3BC0EB', // Bright sky blue
+    end: '#5858E8'    // Blue-violet / indigo tone
+  }
 };
 
 export const Fonts = Platform.select({

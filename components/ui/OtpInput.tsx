@@ -1,0 +1,78 @@
+import React, { useRef, useState } from 'react';
+import { View, TextInput, StyleSheet } from 'react-native';
+
+export interface OtpInputProps {
+  length?: number;
+}
+
+export const OtpInput = ({ length = 4 }: OtpInputProps) => {
+  const [otp, setOtp] = useState<string[]>(new Array(length).fill(""));
+  const inputRefs = useRef<TextInput[]>([]);
+
+  const handleChange = (text: string, index: number) => {
+    const newOtp = [...otp];
+    newOtp[index] = text;
+    setOtp(newOtp);
+
+    // Auto-focus next input
+    if (text.length === 1 && index < length - 1) {
+      inputRefs.current[index + 1]?.focus();
+    }
+  };
+
+  const handleKeyPress = (e: any, index: number) => {
+    // Auto-focus previous input on backspace
+    if (e.nativeEvent.key === 'Backspace' && !otp[index] && index > 0) {
+      inputRefs.current[index - 1]?.focus();
+    }
+  };
+
+  return (
+    <View style={styles.container}>
+      {Array(length)
+        .fill(0)
+        .map((_, index) => (
+          <View key={index} style={styles.box}>
+            <TextInput
+              ref={(ref) => {
+                if (ref) inputRefs.current[index] = ref;
+              }}
+              style={styles.input}
+              maxLength={1}
+              keyboardType="number-pad"
+              placeholder="-"
+              placeholderTextColor="#8A8A8E"
+              value={otp[index]}
+              onChangeText={(text) => handleChange(text, index)}
+              onKeyPress={(e) => handleKeyPress(e, index)}
+            />
+          </View>
+        ))}
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  box: {
+    width: 64,
+    height: 64,
+    backgroundColor: 'rgba(255, 255, 255, 0.9)', // slightly whiter than normal input
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.65)',
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  input: {
+    fontSize: 24,
+    textAlign: 'center',
+    color: '#333333',
+    width: '100%',
+    height: '100%',
+  },
+});
