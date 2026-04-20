@@ -4,10 +4,50 @@ import { Typography } from '@/constants/Typography';
 import { Feather } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
+import { useState, useMemo } from 'react';
 import { KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+
+const COUNTRIES = ['India', 'USA', 'United Kingdom', 'Canada', 'Australia', 'Germany', 'France'];
+const GENDERS = ['Male', 'Female'];
 
 export default function GenderScreen() {
   const router = useRouter();
+  const [age, setAge] = useState('');
+  const [countrySearch, setCountrySearch] = useState('');
+  const [selectedGender, setSelectedGender] = useState('');
+  
+  const [showCountryDropdown, setShowCountryDropdown] = useState(false);
+  const [showGenderDropdown, setShowGenderDropdown] = useState(false);
+
+  // Filter countries based on search query
+  const filteredCountries = useMemo(() => {
+    if (!countrySearch) return COUNTRIES;
+    return COUNTRIES.filter(c => 
+      c.toLowerCase().includes(countrySearch.toLowerCase())
+    );
+  }, [countrySearch]);
+
+  const renderDropdown = (options: string[], onSelect: (val: string) => void, visible: boolean, onClose: () => void) => {
+    if (!visible || options.length === 0) return null;
+    return (
+      <View style={styles.dropdownContainer}>
+        <ScrollView style={{ maxHeight: 200 }} keyboardShouldPersistTaps="handled">
+          {options.map((option) => (
+            <TouchableOpacity 
+              key={option} 
+              style={styles.dropdownOption}
+              onPress={() => {
+                onSelect(option);
+                onClose();
+              }}
+            >
+              <Text style={styles.dropdownOptionText}>{option}</Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+      </View>
+    );
+  };
 
   return (
     <LinearGradient
@@ -31,7 +71,11 @@ export default function GenderScreen() {
             </View>
           </View>
 
-          <ScrollView contentContainerStyle={styles.scrollContainer} bounces={false}>
+          <ScrollView 
+            contentContainerStyle={styles.scrollContainer} 
+            bounces={false}
+            keyboardShouldPersistTaps="handled"
+          >
             {/* Header */}
             <View style={styles.header}>
               <Text style={styles.titleText}>Hi Arjun!</Text>
@@ -40,31 +84,55 @@ export default function GenderScreen() {
 
             {/* Input Field Form */}
             <View style={styles.formContainer}>
-              <AppInput 
-                placeholder="Age"
-                keyboardType="numeric"
-                style={styles.inputStyle}
-              />
+              <View style={styles.inputWrapper}>
+                <AppInput 
+                  placeholder="Age"
+                  keyboardType="numeric"
+                  value={age}
+                  onChangeText={setAge}
+                  style={styles.inputStyle}
+                />
+              </View>
               
-              <TouchableOpacity activeOpacity={0.8} style={styles.fullWidth}>
+              <View style={[styles.inputWrapper, { zIndex: 10 }]}>
                 <AppInput 
                   placeholder="Country"
+                  value={countrySearch}
+                  onChangeText={(text) => {
+                    setCountrySearch(text);
+                    setShowCountryDropdown(true);
+                  }}
+                  onFocus={() => setShowCountryDropdown(true)}
                   style={styles.inputStyle}
-                  editable={false}
-                  pointerEvents="none"
-                  rightIcon={<Feather name="chevron-down" size={20} color="#8A8A8E" />}
+                  rightIcon={
+                    <TouchableOpacity onPress={() => setShowCountryDropdown(!showCountryDropdown)}>
+                      <Feather name={showCountryDropdown ? "chevron-up" : "chevron-down"} size={20} color="#8A8A8E" />
+                    </TouchableOpacity>
+                  }
                 />
-              </TouchableOpacity>
+                {renderDropdown(filteredCountries, setCountrySearch, showCountryDropdown, () => setShowCountryDropdown(false))}
+              </View>
 
-              <TouchableOpacity activeOpacity={0.8} style={styles.fullWidth}>
-                <AppInput 
-                  placeholder="Gender"
-                  style={styles.inputStyle}
-                  editable={false}
-                  pointerEvents="none"
-                  rightIcon={<Feather name="chevron-down" size={20} color="#8A8A8E" />}
-                />
-              </TouchableOpacity>
+              <View style={[styles.inputWrapper, { zIndex: 5 }]}>
+                <TouchableOpacity 
+                  activeOpacity={0.8} 
+                  style={styles.fullWidth}
+                  onPress={() => {
+                    setShowGenderDropdown(!showGenderDropdown);
+                    setShowCountryDropdown(false);
+                  }}
+                >
+                  <AppInput 
+                    placeholder="Gender"
+                    value={selectedGender}
+                    style={styles.inputStyle}
+                    editable={false}
+                    pointerEvents="none"
+                    rightIcon={<Feather name={showGenderDropdown ? "chevron-up" : "chevron-down"} size={20} color="#8A8A8E" />}
+                  />
+                </TouchableOpacity>
+                {renderDropdown(GENDERS, setSelectedGender, showGenderDropdown, () => setShowGenderDropdown(false))}
+              </View>
               
               <AppButton 
                 title="Next"
@@ -133,17 +201,48 @@ const styles = StyleSheet.create({
   },
   formContainer: {
     width: '100%',
-    alignItems: 'center',
+  },
+  inputWrapper: {
+    width: '100%',
+    position: 'relative',
+    marginBottom: 16,
   },
   fullWidth: {
     width: '100%',
   },
   inputStyle: {
-    marginBottom: 16,
+    marginBottom: 0, 
     backgroundColor: '#FFFFFF', 
     borderColor: 'rgba(0,0,0,0.05)', 
   },
   nextButton: {
     marginTop: 8,
+  },
+  dropdownContainer: {
+    position: 'absolute',
+    top: 54, 
+    left: 0,
+    right: 0,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.05)',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 5,
+    overflow: 'hidden',
+  },
+  dropdownOption: {
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F2F2F7',
+  },
+  dropdownOptionText: {
+    fontFamily: Typography.fonts.regular,
+    fontSize: 16,
+    color: '#333333',
   }
 });
