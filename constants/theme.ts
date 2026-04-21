@@ -29,6 +29,16 @@ export const Colors = {
   gradient: {
     start: '#3BC0EB', // Bright sky blue
     end: '#5858E8'    // Blue-violet / indigo tone
+  },
+  therapy: {
+    orange: '#FFAF22',
+    blue: '#1E82E6',
+    purple: '#C282C9',
+  },
+  brand: {
+    dotGreen: '#43C6B1',
+    inputBackground: '#F0F4F8',
+    cardBackground: '#FFFFFF',
   }
 };
 

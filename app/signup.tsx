@@ -1,17 +1,87 @@
 import { AppButton } from '@/components/ui/AppButton';
 import { AppInput } from '@/components/ui/AppInput';
 import { Colors } from '@/constants/theme';
+import { API_BASE_URL } from '@/constants/Config';
 import { Typography } from '@/constants/Typography';
 import { AntDesign, Feather } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View, ActivityIndicator } from 'react-native';
+
+// Remove constant VALID_EMAIL as we are using a real API now
 
 export default function SignupScreen() {
   const router = useRouter();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSendOtp = async () => {
+    if (!email.trim()) {
+      Alert.alert('Error', 'Please enter your email address.');
+      return;
+    }
+    
+    // Simple email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.trim())) {
+      Alert.alert('Error', 'Please enter a valid email address.');
+      return;
+    }
+
+    if (!password) {
+      Alert.alert('Error', 'Please enter a password.');
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      Alert.alert('Error', 'Passwords do not match.');
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/auth/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: email.trim(),
+          password: password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Success response
+        // { "success": true, "message": "...", "data": { ... } }
+        Alert.alert('Success', data.message || 'OTP sent to your email.');
+        router.push({
+          pathname: '/emailverify',
+          params: { email: email.trim() }
+        });
+      } else if (response.status === 422) {
+        // Validation error
+        const errorMsg = data.detail?.[0]?.msg || 'Validation error';
+        Alert.alert('Error', errorMsg);
+      } else {
+        // Other errors
+        Alert.alert('Error', data.message || 'Registration failed. Please try again.');
+      }
+    } catch (error) {
+      console.error('Registration Error:', error);
+      Alert.alert('Connection Error', 'Could not connect to the server. If you are using a physical device, please use your machine\'s IP address instead of localhost.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <LinearGradient
@@ -37,6 +107,8 @@ export default function SignupScreen() {
               placeholder="Email"
               keyboardType="email-address"
               autoCapitalize="none"
+              value={email}
+              onChangeText={setEmail}
               style={styles.inputMargin}
             />
 
@@ -44,6 +116,8 @@ export default function SignupScreen() {
               iconName="lock"
               placeholder="Password"
               secureTextEntry={!showPassword}
+              value={password}
+              onChangeText={setPassword}
               style={styles.inputMargin}
               rightIcon={
                 <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
@@ -56,6 +130,8 @@ export default function SignupScreen() {
               iconName="lock"
               placeholder="Confirm Password"
               secureTextEntry={!showConfirmPassword}
+              value={confirmPassword}
+              onChangeText={setConfirmPassword}
               style={styles.inputMargin}
               rightIcon={
                 <TouchableOpacity onPress={() => setShowConfirmPassword(!showConfirmPassword)}>
@@ -65,9 +141,11 @@ export default function SignupScreen() {
             />
 
             <AppButton
-              title="Send OTP"
+              title={isLoading ? "" : "Send OTP"}
               style={styles.signInBtnMargin}
-              onPress={() => router.push('/verify')}
+              onPress={handleSendOtp}
+              disabled={isLoading}
+              icon={isLoading ? <ActivityIndicator color="#FFF" /> : undefined}
             />
           </View>
 
@@ -81,7 +159,7 @@ export default function SignupScreen() {
             <AppButton
               title="Apple"
               variant="social"
-              icon={<AntDesign name="apple1" size={20} color="#000" />}
+              icon={<AntDesign name="apple" size={20} color="#000" />}
               style={styles.socialBtnMargin}
             />
             <AppButton

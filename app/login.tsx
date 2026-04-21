@@ -1,16 +1,63 @@
 import { AppButton } from '@/components/ui/AppButton';
 import { AppInput } from '@/components/ui/AppInput';
 import { Colors } from '@/constants/theme';
+import { API_BASE_URL } from '@/constants/Config';
 import { Typography } from '@/constants/Typography';
-import { AntDesign, Feather } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Feather } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useState } from 'react';
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useRouter } from 'expo-router';
+import { useState } from 'react';
+import { Alert, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View, ActivityIndicator } from 'react-native';
 
 export default function LoginScreen() {
   const router = useRouter();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleLogin = async () => {
+    if (!email.trim() || !password) {
+      Alert.alert('Error', 'Please enter both email and password.');
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: email.trim(),
+          password: password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Success response
+        // { "success": true, "message": "Login successful", "data": { "access_token": "..." } }
+        await AsyncStorage.setItem('userToken', data.data.access_token);
+        Alert.alert('Success', data.message || 'Login successful');
+        router.push('/language');
+      } else {
+        // Error response
+        // { "detail": { "success": false, "message": "Invalid credentials", "data": null } }
+        const errorMsg = data.detail?.message || data.message || 'Login failed. Please check your credentials.';
+        Alert.alert('Error', errorMsg);
+      }
+    } catch (error) {
+      console.error('Login Error:', error);
+      Alert.alert('Connection Error', 'Could not connect to the server. Please check your internet connection.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <LinearGradient
@@ -25,24 +72,28 @@ export default function LoginScreen() {
 
           {/* Header */}
           <View style={styles.header}>
-            <Text style={styles.titleText}>Welcome to Soul AI</Text>
-            <Text style={styles.subtitleText}>Sign in to your account</Text>
+            <Text style={styles.titleText}>Soul AI</Text>
+            <Text style={styles.subtitleText}>Log in to your Soul AI account</Text>
           </View>
 
           {/* Form */}
           <View style={styles.formContainer}>
             <AppInput
               iconName="user"
-              placeholder="Email"
+              placeholder="Email*"
               keyboardType="email-address"
               autoCapitalize="none"
+              value={email}
+              onChangeText={setEmail}
               style={styles.inputMargin}
             />
 
             <AppInput
               iconName="lock"
-              placeholder="Password"
+              placeholder="Password*"
               secureTextEntry={!showPassword}
+              value={password}
+              onChangeText={setPassword}
               style={styles.inputMargin}
               rightIcon={
                 <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
@@ -52,29 +103,18 @@ export default function LoginScreen() {
             />
 
             <AppButton
-              title="Sign In"
+              title={isLoading ? "" : "Sign In"}
               style={styles.signInBtnMargin}
+              onPress={handleLogin}
+              disabled={isLoading}
+              icon={isLoading ? <ActivityIndicator color="#FFF" /> : undefined}
             />
-          </View>
 
-          {/* Divider */}
-          <View style={styles.dividerContainer}>
-            <Text style={styles.dividerText}>Or Sign In With</Text>
-          </View>
-
-          {/* Social Logins */}
-          <View style={styles.socialContainer}>
-            <AppButton
-              title="Apple"
-              variant="social"
-              icon={<AntDesign name="apple1" size={20} color="#000" />}
-              style={styles.socialBtnMargin}
-            />
-            <AppButton
-              title="Google"
-              variant="social"
-              icon={<AntDesign name="google" size={20} color="#DB4437" />} // Standard Google Red
-            />
+            <View style={styles.forgotPasswordContainer}>
+              <TouchableOpacity activeOpacity={0.7} onPress={() => { }}>
+                <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
+              </TouchableOpacity>
+            </View>
           </View>
 
           {/* Bottom Link */}
@@ -150,8 +190,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   bottomLinkText: {
-    fontFamily: Typography.fonts.regular,
+    fontFamily: Typography.fonts.bold,
     fontSize: 14,
     color: '#FFFFFF',
-  }
+  },
+  forgotPasswordContainer: {
+    width: '100%',
+    alignItems: 'flex-start',
+    marginTop: 8,
+  },
+
+  forgotPasswordText: {
+    fontFamily: Typography.fonts.bold,
+    fontSize: 13,
+    color: '#FFFFFF'
+  },
+
 });

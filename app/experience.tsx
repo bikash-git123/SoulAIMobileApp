@@ -1,25 +1,31 @@
 import { AppButton } from '@/components/ui/AppButton';
-import { AppInput } from '@/components/ui/AppInput';
 import { Typography } from '@/constants/Typography';
 import { Feather } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-export default function FullnameScreen() {
+const LANGUAGES = [
+  'Getting Started',
+  'Some Experience',
+  'Significant Experience',
+];
+
+export default function ExperienceScreen() {
   const router = useRouter();
-  const { language } = useLocalSearchParams();
-  const [name, setName] = useState('');
+  const [selectedLanguage, setSelectedLanguage] = useState('English');
 
   return (
     <LinearGradient
+      // Approximating the radial gradient from the CSS
       colors={['#FFFFFF', '#E2F4FF']}
       start={{ x: 0.1, y: 0.1 }}
       end={{ x: 1, y: 1 }}
       style={styles.container}
     >
       <SafeAreaView style={styles.safeArea}>
+
         <KeyboardAvoidingView
           style={{ flex: 1 }}
           behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -37,29 +43,40 @@ export default function FullnameScreen() {
           <ScrollView contentContainerStyle={styles.scrollContainer} bounces={false}>
             {/* Header */}
             <View style={styles.header}>
-              <Text style={styles.titleText}>What's your name?</Text>
+              <Text style={styles.titleText}>Your Experience with {'\n'}Therapy?</Text>
               <Text style={styles.subtitleText}>Let us know more about you</Text>
             </View>
 
-            {/* Input Field Form */}
-            <View style={styles.formContainer}>
-              <AppInput
-                placeholder="Full Name"
-                style={styles.inputStyle}
-                value={name}
-                onChangeText={setName}
-              // No icon is passed to match the design EXACTLY
-              />
-
-              <AppButton
-                title="Next"
-                style={styles.nextButton}
-                onPress={() => router.push({
-                  pathname: '/gender',
-                  params: { language, fullName: name }
-                })}
-              />
+            {/* Language Options */}
+            <View style={styles.optionsContainer}>
+              {LANGUAGES.map((lang) => {
+                const isSelected = selectedLanguage === lang;
+                return (
+                  <TouchableOpacity
+                    key={lang}
+                    activeOpacity={0.7}
+                    onPress={() => setSelectedLanguage(lang)}
+                    style={[
+                      styles.languageOption,
+                      isSelected && styles.languageOptionSelected
+                    ]}
+                  >
+                    <Text style={[
+                      styles.languageText,
+                      isSelected ? { color: '#8A8A8E' } : { color: '#8A8A8E' } // In mockup all options look gray, selected has blue border
+                    ]}>
+                      {lang}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
             </View>
+
+            <AppButton
+              title="Next"
+              style={styles.nextButton}
+              onPress={() => router.push('/response')}
+            />
           </ScrollView>
         </KeyboardAvoidingView>
       </SafeAreaView>
@@ -94,9 +111,9 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   progressFill: {
-    width: '26%', // Adjusted for consistent flow
+    width: '65%', // Adjusted for consistent flow
     height: '100%',
-    backgroundColor: '#3C61DD',
+    backgroundColor: '#3C61DD', // Primary blue
   },
   scrollContainer: {
     flexGrow: 1,
@@ -106,11 +123,10 @@ const styles = StyleSheet.create({
   header: {
     alignItems: 'center',
     marginBottom: 40,
-    marginTop: 60,
   },
   titleText: {
     fontFamily: Typography.fonts.regular,
-    fontSize: 32,
+    fontSize: 32, // Large title
     color: '#111111',
     textAlign: 'center',
     marginBottom: 12,
@@ -121,17 +137,30 @@ const styles = StyleSheet.create({
     color: '#8A8A8E',
     textAlign: 'center',
   },
-  formContainer: {
+  optionsContainer: {
     width: '100%',
-    alignItems: 'center',
+    marginBottom: 32,
   },
-  inputStyle: {
-    marginBottom: 16,
-    // Custom style overrides if wanted, but standard generic AppInput background works perfectly.
-    backgroundColor: '#FFFFFF', // The input seems fully white here instead of 0.8 opacity based on mockup.
-    borderColor: 'rgba(0,0,0,0.05)',
+  languageOption: {
+    width: '100%',
+    height: 60, // slightly taller than standard input based on visual weight
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.65)',
+    borderRadius: 8,
+    justifyContent: 'center',
+    paddingHorizontal: 16,
+    marginBottom: 12,
+  },
+  languageOptionSelected: {
+    borderColor: '#3C61DD', // Blue border for selected state
+    borderWidth: 1.5,
+  },
+  languageText: {
+    fontFamily: Typography.fonts.regular,
+    fontSize: 16,
   },
   nextButton: {
-    marginTop: 8,
+    marginTop: 'auto', // Push to bottom
   }
 });

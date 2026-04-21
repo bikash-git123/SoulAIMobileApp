@@ -1,33 +1,114 @@
-import { Text, StyleSheet, View } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import { AppButton } from '@/components/ui/AppButton';
 import { Colors } from '@/constants/theme';
 import { Typography } from '@/constants/Typography';
-import { useEffect } from 'react';
+import { AntDesign, Feather } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View, ActivityIndicator } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useEffect, useState } from 'react';
 
-export default function SplashScreen() {
+export default function AuthOptionsScreen() {
   const router = useRouter();
+  const [isCheckingToken, setIsCheckingToken] = useState(true);
 
   useEffect(() => {
-    // Navigate to the login screen after 3 seconds
-    const timer = setTimeout(() => {
-      router.replace('/login');
-    }, 3000);
+    const checkToken = async () => {
+      try {
+        const token = await AsyncStorage.getItem('userToken');
+        if (token) {
+          router.replace('/language');
+        }
+      } catch (e) {
+        console.error('Error checking token:', e);
+      } finally {
+        setIsCheckingToken(false);
+      }
+    };
 
-    return () => clearTimeout(timer); // Cleanup on unmount
-  }, [router]);
+    checkToken();
+  }, []);
+
+  if (isCheckingToken) {
+    return (
+      <LinearGradient
+        colors={[Colors.gradient.start, Colors.gradient.end]}
+        style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}
+      >
+        <ActivityIndicator size="large" color="#FFFFFF" />
+      </LinearGradient>
+    );
+  }
 
   return (
     <LinearGradient
       colors={[Colors.gradient.start, Colors.gradient.end]}
       style={styles.container}
     >
-      <View style={styles.centerContainer}>
-        <Text style={styles.titleText}>Soul AI</Text>
-        <Text style={styles.subtitleText}>
-          A personalized therapy{'\n'}AI Companion
-        </Text>
-      </View>
+      <ScrollView contentContainerStyle={styles.scrollContainer} bounces={false}>
+
+        {/* Header (same as first screen) */}
+        <View style={styles.header}>
+          <Text style={styles.titleText}>Welcome to Soul AI</Text>
+          <Text style={styles.subtitleText}>
+            Sign in to Personalize your{"\n"}Therapy AI Companion
+          </Text>
+        </View>
+
+        {/* Buttons (acts like formContainer) */}
+        <View style={styles.formContainer}>
+
+          <AppButton
+            title="Continue with Phone Number"
+            variant="social"
+            icon={<Feather name="message-circle" size={20} color="#000" />}
+            style={styles.inputMargin}
+            onPress={() => router.push('/sendotp')}
+          />
+
+          <AppButton
+            title="Continue with Email"
+            variant="social"
+            icon={<Feather name="mail" size={20} color="#000" />}
+            style={styles.inputMargin}
+            onPress={() => router.push('/login')}
+          />
+
+          <AppButton
+            title="Continue with Apple"
+            variant="social"
+            icon={<AntDesign name="apple" size={20} color="#000" />}
+            style={styles.inputMargin}
+            onPress={() => {}}
+          />
+
+          <AppButton
+            title="Continue with Google"
+            variant="social"
+            icon={<AntDesign name="google" size={20} color="#DB4437" />}
+          />
+
+        </View>
+
+        {/* Divider (same position as first screen) */}
+        <View style={styles.dividerContainer}>
+          <Text style={styles.termsText}>
+            By tapping Continue or logging into an existing Soul account, you agree to our{' '}
+            <Text style={styles.linkText}>Terms</Text> and acknowledge that you have read our{' '}
+            <Text style={styles.linkText}>Privacy Policy</Text>.
+          </Text>
+        </View>
+
+        {/* Bottom Link (same as first screen) */}
+        <View style={styles.bottomLinkContainer}>
+          <TouchableOpacity onPress={() => router.push('/signup')}>
+            <Text style={styles.bottomLinkText}>
+              Don’t have an account? <Text style={styles.boldText}>Create one</Text>
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+      </ScrollView>
     </LinearGradient>
   );
 }
@@ -36,23 +117,79 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  centerContainer: {
-    flex: 1,
-    justifyContent: 'center',
+
+  scrollContainer: {
+    flexGrow: 1,
+    alignItems: 'center',
+    paddingHorizontal: 28,
+    paddingTop: 80,
+    paddingBottom: 40,
+  },
+
+  /* SAME HEADER STRUCTURE */
+  header: {
+    alignItems: 'center',
+    marginBottom: 80,
+  },
+
+  titleText: {
+    fontFamily: Typography.fonts.medium,
+    fontSize: Typography.sizes.title,
+    color: '#FFFFFF',
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+
+  subtitleText: {
+    fontFamily: Typography.fonts.regular,
+    fontSize: Typography.sizes.subtitle,
+    color: '#FFFFFF',
+    opacity: 0.7,
+    textAlign: 'center',
+    lineHeight: 20,
+  },
+
+  /* SAME AS formContainer */
+  formContainer: {
+    width: '100%',
     alignItems: 'center',
   },
-  titleText: {
-    fontFamily: Typography.fonts.regular, // Using regular for Soul AI 
-    fontSize: Typography.sizes.title,     // 32px
-    color: '#FFFFFF',
-    marginBottom: 0, // Reduced gap as requested
+
+  inputMargin: {
+    marginBottom: 16,
   },
-  subtitleText: {
-    fontFamily: Typography.fonts.medium,  // Using Medium for subtitle
-    fontSize: Typography.sizes.subtitle,  // 16px
-    color: '#FFFFFF',
-    opacity: 0.6, // 60% opacity per design
+
+  /* USED AS TERMS AREA */
+  dividerContainer: {
+    marginTop: 32,
+    paddingHorizontal: 10,
+    alignItems: 'center',
+  },
+
+  termsText: {
+    fontSize: 12,
+    color: '#DBE7FB',
     textAlign: 'center',
-    lineHeight: 22, // Adjusted slightly for cleaner stacking
+    opacity: 0.7,
+    lineHeight: 18,
+  },
+
+  linkText: {
+    textDecorationLine: 'underline',
+  },
+
+  bottomLinkContainer: {
+    marginTop: 32,
+    alignItems: 'center',
+  },
+
+  bottomLinkText: {
+    fontFamily: Typography.fonts.regular,
+    fontSize: 14,
+    color: '#FFFFFF',
+  },
+
+  boldText: {
+    fontFamily: Typography.fonts.medium,
   },
 });

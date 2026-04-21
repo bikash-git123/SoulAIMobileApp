@@ -3,9 +3,10 @@ import { View, TextInput, StyleSheet } from 'react-native';
 
 export interface OtpInputProps {
   length?: number;
+  onChange?: (otp: string) => void;
 }
 
-export const OtpInput = ({ length = 4 }: OtpInputProps) => {
+export const OtpInput = ({ length = 4, onChange }: OtpInputProps) => {
   const [otp, setOtp] = useState<string[]>(new Array(length).fill(""));
   const inputRefs = useRef<TextInput[]>([]);
 
@@ -13,6 +14,7 @@ export const OtpInput = ({ length = 4 }: OtpInputProps) => {
     const newOtp = [...otp];
     newOtp[index] = text;
     setOtp(newOtp);
+    onChange?.(newOtp.join(''));
 
     // Auto-focus next input
     if (text.length === 1 && index < length - 1) {

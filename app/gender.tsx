@@ -3,8 +3,8 @@ import { AppInput } from '@/components/ui/AppInput';
 import { Typography } from '@/constants/Typography';
 import { Feather } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useRouter } from 'expo-router';
-import { useState, useMemo } from 'react';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useMemo, useState } from 'react';
 import { KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 const COUNTRIES = ['India', 'USA', 'United Kingdom', 'Canada', 'Australia', 'Germany', 'France'];
@@ -12,17 +12,18 @@ const GENDERS = ['Male', 'Female'];
 
 export default function GenderScreen() {
   const router = useRouter();
+  const { language, fullName } = useLocalSearchParams();
   const [age, setAge] = useState('');
   const [countrySearch, setCountrySearch] = useState('');
   const [selectedGender, setSelectedGender] = useState('');
-  
+
   const [showCountryDropdown, setShowCountryDropdown] = useState(false);
   const [showGenderDropdown, setShowGenderDropdown] = useState(false);
 
   // Filter countries based on search query
   const filteredCountries = useMemo(() => {
     if (!countrySearch) return COUNTRIES;
-    return COUNTRIES.filter(c => 
+    return COUNTRIES.filter(c =>
       c.toLowerCase().includes(countrySearch.toLowerCase())
     );
   }, [countrySearch]);
@@ -33,8 +34,8 @@ export default function GenderScreen() {
       <View style={styles.dropdownContainer}>
         <ScrollView style={{ maxHeight: 200 }} keyboardShouldPersistTaps="handled">
           {options.map((option) => (
-            <TouchableOpacity 
-              key={option} 
+            <TouchableOpacity
+              key={option}
               style={styles.dropdownOption}
               onPress={() => {
                 onSelect(option);
@@ -57,8 +58,8 @@ export default function GenderScreen() {
       style={styles.container}
     >
       <SafeAreaView style={styles.safeArea}>
-        <KeyboardAvoidingView 
-          style={{ flex: 1 }} 
+        <KeyboardAvoidingView
+          style={{ flex: 1 }}
           behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         >
           {/* Top Navigation & Progress */}
@@ -71,21 +72,21 @@ export default function GenderScreen() {
             </View>
           </View>
 
-          <ScrollView 
-            contentContainerStyle={styles.scrollContainer} 
+          <ScrollView
+            contentContainerStyle={styles.scrollContainer}
             bounces={false}
             keyboardShouldPersistTaps="handled"
           >
             {/* Header */}
             <View style={styles.header}>
-              <Text style={styles.titleText}>Hi Arjun!</Text>
+              <Text style={styles.titleText}>Hi {fullName || 'Arjun'}!</Text>
               <Text style={styles.subtitleText}>Let us know more about you</Text>
             </View>
 
             {/* Input Field Form */}
             <View style={styles.formContainer}>
               <View style={styles.inputWrapper}>
-                <AppInput 
+                <AppInput
                   placeholder="Age"
                   keyboardType="numeric"
                   value={age}
@@ -93,9 +94,9 @@ export default function GenderScreen() {
                   style={styles.inputStyle}
                 />
               </View>
-              
+
               <View style={[styles.inputWrapper, { zIndex: 10 }]}>
-                <AppInput 
+                <AppInput
                   placeholder="Country"
                   value={countrySearch}
                   onChangeText={(text) => {
@@ -114,15 +115,15 @@ export default function GenderScreen() {
               </View>
 
               <View style={[styles.inputWrapper, { zIndex: 5 }]}>
-                <TouchableOpacity 
-                  activeOpacity={0.8} 
+                <TouchableOpacity
+                  activeOpacity={0.8}
                   style={styles.fullWidth}
                   onPress={() => {
                     setShowGenderDropdown(!showGenderDropdown);
                     setShowCountryDropdown(false);
                   }}
                 >
-                  <AppInput 
+                  <AppInput
                     placeholder="Gender"
                     value={selectedGender}
                     style={styles.inputStyle}
@@ -133,10 +134,11 @@ export default function GenderScreen() {
                 </TouchableOpacity>
                 {renderDropdown(GENDERS, setSelectedGender, showGenderDropdown, () => setShowGenderDropdown(false))}
               </View>
-              
-              <AppButton 
+
+              <AppButton
                 title="Next"
                 style={styles.nextButton}
+                onPress={() => router.push('/onboarding')}
               />
             </View>
           </ScrollView>
@@ -168,14 +170,14 @@ const styles = StyleSheet.create({
   progressTrack: {
     flex: 1,
     height: 4,
-    backgroundColor: 'rgba(60, 97, 221, 0.1)', 
+    backgroundColor: 'rgba(60, 97, 221, 0.1)',
     borderRadius: 2,
     overflow: 'hidden',
   },
   progressFill: {
-    width: '80%', 
+    width: '39%',
     height: '100%',
-    backgroundColor: '#3C61DD', 
+    backgroundColor: '#3C61DD',
   },
   scrollContainer: {
     flexGrow: 1,
@@ -185,10 +187,11 @@ const styles = StyleSheet.create({
   header: {
     alignItems: 'center',
     marginBottom: 40,
+    marginTop: 60,
   },
   titleText: {
     fontFamily: Typography.fonts.regular,
-    fontSize: 32, 
+    fontSize: 32,
     color: '#111111',
     textAlign: 'center',
     marginBottom: 12,
@@ -211,16 +214,16 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   inputStyle: {
-    marginBottom: 0, 
-    backgroundColor: '#FFFFFF', 
-    borderColor: 'rgba(0,0,0,0.05)', 
+    marginBottom: 0,
+    backgroundColor: '#FFFFFF',
+    borderColor: 'rgba(0,0,0,0.05)',
   },
   nextButton: {
     marginTop: 8,
   },
   dropdownContainer: {
     position: 'absolute',
-    top: 54, 
+    top: 54,
     left: 0,
     right: 0,
     backgroundColor: '#FFFFFF',

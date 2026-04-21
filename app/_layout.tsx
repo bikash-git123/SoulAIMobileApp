@@ -1,10 +1,10 @@
+import { NunitoSans_400Regular, NunitoSans_500Medium, useFonts } from '@expo-google-fonts/nunito-sans';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
-import { useEffect } from 'react';
 import * as SplashScreen from 'expo-splash-screen';
-import { useFonts, NunitoSans_400Regular, NunitoSans_500Medium } from '@expo-google-fonts/nunito-sans';
+import { StatusBar } from 'expo-status-bar';
+import { useEffect } from 'react';
+import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/use-color-scheme';
 
@@ -35,20 +35,31 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack>
-        {/* Make the splash screen we built the primary initial route */}
+        {/* splash screen we built the primary initial route */}
         <Stack.Screen name="index" options={{ headerShown: false }} />
-        {/* Make the login screen full screen without the default header */}
+        {/* loginoptions screen full screen without the default header */}
+        <Stack.Screen name="loginoptions" options={{ headerShown: false }} />
+        {/* login screen full screen without the default header */}
         <Stack.Screen name="login" options={{ headerShown: false }} />
-        {/* Make the signup screen full screen without the default header */}
+        {/* signup screen full screen without the default header */}
         <Stack.Screen name="signup" options={{ headerShown: false }} />
-        {/* Make the verification screen full screen without the default header */}
+        {/* sendotp screen full screen without the default header */}
+        <Stack.Screen name="sendotp" options={{ headerShown: false }} />
+        {/* verification screen full screen without the default header */}
         <Stack.Screen name="verify" options={{ headerShown: false }} />
-        {/* Make the language screen full screen without the default header */}
+        {/* email verification screen full screen without the default header */}
+        <Stack.Screen name="emailverify" options={{ headerShown: false }} />
+        {/* language screen full screen without the default header */}
         <Stack.Screen name="language" options={{ headerShown: false }} />
-        {/* Make the fullname screen full screen without the default header */}
+        {/* fullname screen full screen without the default header */}
         <Stack.Screen name="fullname" options={{ headerShown: false }} />
-        {/* Make the gender screen full screen without the default header */}
+        {/* gender screen full screen without the default header */}
         <Stack.Screen name="gender" options={{ headerShown: false }} />
+        <Stack.Screen name="experience" options={{ headerShown: false }} />
+        <Stack.Screen name="response" options={{ headerShown: false }} />
+        <Stack.Screen name="support" options={{ headerShown: false }} />
+        <Stack.Screen name="chatstarter" options={{ headerShown: false }} />
+        <Stack.Screen name="onboarding" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
       </Stack>

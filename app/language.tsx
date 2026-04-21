@@ -9,10 +9,15 @@ import { Platform, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity,
 const LANGUAGES = [
   'English',
   'Hindi',
-  'French',
-  'German',
-  'Japanese',
-  'Chinese'
+  'Marathi',
+  'Gujarati',
+  'Odia',
+  'Tamil',
+  'Telugu',
+  'Kannada',
+  'Malayalam',
+  'Punjabi',
+  'Bengali'
 ];
 
 export default function LanguageScreen() {
@@ -28,7 +33,7 @@ export default function LanguageScreen() {
       style={styles.container}
     >
       <SafeAreaView style={styles.safeArea}>
-        
+
         {/* Top Navigation & Progress */}
         <View style={styles.topNavContainer}>
           <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
@@ -75,7 +80,10 @@ export default function LanguageScreen() {
           <AppButton
             title="Next"
             style={styles.nextButton}
-            onPress={() => router.push('/fullname')}
+            onPress={() => router.push({
+              pathname: '/fullname',
+              params: { language: selectedLanguage }
+            })}
           />
         </ScrollView>
       </SafeAreaView>
@@ -110,7 +118,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   progressFill: {
-    width: '30%', // Approximate based on mockup
+    width: '13%', // Adjusted for consistent flow
     height: '100%',
     backgroundColor: '#3C61DD', // Primary blue
   },

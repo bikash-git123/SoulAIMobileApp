@@ -10,18 +10,19 @@ export interface AppButtonProps extends TouchableOpacityProps {
   textStyle?: StyleProp<TextStyle>;
 }
 
-export const AppButton = ({ title, variant = 'primary', icon, style, textStyle, ...props }: AppButtonProps) => {
+export const AppButton = ({ title, variant = 'primary', icon, style, textStyle, onPress, ...props }: AppButtonProps) => {
   const isSocial = variant === 'social';
 
   return (
     <TouchableOpacity
+      {...props}
       style={[
         styles.baseButton,
         isSocial ? styles.socialButton : styles.primaryButton,
         style
       ]}
       activeOpacity={0.8}
-      {...props}
+      onPress={onPress}
     >
       {icon && React.cloneElement(icon as React.ReactElement, { style: [styles.icon, (icon as React.ReactElement).props.style] })}
       <Text style={[

@@ -1,0 +1,125 @@
+import { AppButton } from '@/components/ui/AppButton';
+import { AppInput } from '@/components/ui/AppInput';
+import { Colors } from '@/constants/theme';
+import { Typography } from '@/constants/Typography';
+import { LinearGradient } from 'expo-linear-gradient';
+import { useRouter } from 'expo-router';
+import { useState } from 'react';
+import { Alert, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+
+export default function LoginScreen() {
+    const router = useRouter();
+
+    const [phone, setPhone] = useState('');
+
+    // ✅ Validation Function
+    const handleLogin = () => {
+        const phoneRegex = /^[0-9]{10}$/;
+
+        if (!phoneRegex.test(phone)) {
+            Alert.alert('Invalid Phone Number', 'Please enter a valid 10-digit phone number');
+            return;
+        }
+
+        // ✅ If valid → proceed
+        router.push('/verify');
+    };
+
+    return (
+        <LinearGradient
+            colors={[Colors.gradient.start, Colors.gradient.end]}
+            style={styles.container}
+        >
+            <KeyboardAvoidingView
+                style={{ flex: 1 }}
+                behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+            >
+                <ScrollView contentContainerStyle={styles.scrollContainer} bounces={false}>
+
+                    {/* Header */}
+                    <View style={styles.header}>
+                        <Text style={styles.titleText}>Soul AI</Text>
+                        <Text style={styles.subtitleText}>Log in to your Soul AI account</Text>
+                    </View>
+
+                    {/* Form */}
+                    <View style={styles.formContainer}>
+                        <AppInput
+                            iconName="phone"
+                            placeholder="Phone Number*"
+                            keyboardType="number-pad"
+                            value={phone}
+                            onChangeText={setPhone}
+                            maxLength={10}
+                            style={styles.inputMargin}
+                        />
+
+                        <AppButton
+                            title="Continue"
+                            style={styles.signInBtnMargin}
+                            onPress={handleLogin}
+                        />
+                    </View>
+
+                    {/* Bottom Link */}
+                    <View style={styles.bottomLinkContainer}>
+                        <TouchableOpacity activeOpacity={0.7} onPress={() => router.push('/signup')}>
+                            <Text style={styles.bottomLinkText}>
+                                Don't have an account? Create one
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+
+                </ScrollView>
+            </KeyboardAvoidingView>
+        </LinearGradient>
+    );
+}
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
+    scrollContainer: {
+        flexGrow: 1,
+        alignItems: 'center',
+        paddingHorizontal: 28,
+        paddingTop: 80,
+        paddingBottom: 40,
+    },
+    header: {
+        alignItems: 'center',
+        marginBottom: 100,
+    },
+    titleText: {
+        fontFamily: Typography.fonts.regular,
+        fontSize: Typography.sizes.title,
+        color: '#FFFFFF',
+        marginBottom: 8,
+    },
+    subtitleText: {
+        fontFamily: Typography.fonts.medium,
+        fontSize: Typography.sizes.subtitle,
+        color: '#FFFFFF',
+        opacity: 0.6,
+    },
+    formContainer: {
+        width: '100%',
+        alignItems: 'center',
+    },
+    inputMargin: {
+        marginBottom: 12,
+    },
+    signInBtnMargin: {
+        marginTop: 4,
+    },
+    bottomLinkContainer: {
+        marginTop: 32,
+        alignItems: 'center',
+    },
+    bottomLinkText: {
+        fontFamily: Typography.fonts.bold,
+        fontSize: 14,
+        color: '#FFFFFF',
+    },
+});

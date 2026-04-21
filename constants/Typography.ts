@@ -2,6 +2,7 @@ export const Typography = {
   fonts: {
     regular: 'NunitoSans_400Regular',
     medium: 'NunitoSans_500Medium',
+    bold: 'NunitoSans_700Bold',
   },
   sizes: {
     splashText: 20,
