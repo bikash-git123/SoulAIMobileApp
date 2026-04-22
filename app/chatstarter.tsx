@@ -18,19 +18,9 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { normalize } from "@/utils/responsive";
 
-const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
-// Responsive Scaling Utility
-const scale = SCREEN_WIDTH / 375;
-const normalize = (size: number) => {
-  const newSize = size * scale;
-  if (Platform.OS === "ios") {
-    return Math.round(PixelRatio.roundToNearestPixel(newSize));
-  } else {
-    return Math.round(PixelRatio.roundToNearestPixel(newSize)) - 2;
-  }
-};
 
 const THERAPY_TYPES = [
   { id: "1", title: "Cognitive Therapy", color: Colors.therapy.orange },
@@ -60,6 +50,16 @@ export default function ChatStarterScreen() {
   const [inputText, setInputText] = useState("");
 
   const displayName = name || "Bikash";
+
+  const handleSend = () => {
+    if (inputText.trim()) {
+      router.push({
+        pathname: "/conversations",
+        params: { initialMessage: inputText.trim() },
+      } as any);
+      setInputText("");
+    }
+  };
 
   return (
     <LinearGradient
@@ -159,7 +159,7 @@ export default function ChatStarterScreen() {
                 <TouchableOpacity style={styles.iconButton}>
                   <Feather name="mic" size={normalize(24)} color="#333" />
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.iconButton}>
+                <TouchableOpacity style={styles.iconButton} onPress={handleSend}>
                   <Ionicons
                     name="paper-plane-outline"
                     size={normalize(24)}
