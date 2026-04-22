@@ -37,7 +37,7 @@ export const Colors = {
   },
   brand: {
     dotGreen: '#43C6B1',
-    inputBackground: '#F0F4F8',
+    inputBackground: '#E7E5E4',
     cardBackground: '#FFFFFF',
   }
 };
