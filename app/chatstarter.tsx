@@ -254,7 +254,7 @@ const styles = StyleSheet.create({
   promptsContainer: {
     marginBottom: normalize(20),
     alignItems: "center",
-    marginTop: normalize(30),
+    marginTop: normalize(40),
   },
   promptCard: {
     flexDirection: "row",
