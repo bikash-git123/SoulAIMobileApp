@@ -6,7 +6,8 @@ import { Typography } from '@/constants/Typography';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
-import { Alert, KeyboardAvoidingView, Platform, StyleSheet, Text, TouchableOpacity, View, ActivityIndicator } from 'react-native';
+import { KeyboardAvoidingView, Platform, StyleSheet, Text, TouchableOpacity, View, ActivityIndicator } from 'react-native';
+import { toast } from '@/utils/toast';
 
 // Remove VALID_OTP as we are using real API now
 
@@ -18,7 +19,7 @@ export default function EmailVerifyScreen() {
 
   const handleVerify = async () => {
     if (otp.length < 4) {
-      Alert.alert('Incomplete OTP', 'Please enter the 4-digit OTP.');
+      toast.error('Incomplete OTP', 'Please enter the 4-digit OTP.');
       return;
     }
 
@@ -41,16 +42,16 @@ export default function EmailVerifyScreen() {
       if (response.ok) {
         // Success response
         // { "success": true, "message": "OTP verified successfully. User is now verified.", "data": null }
-        Alert.alert('Success', data.message || 'OTP verified successfully.');
+        toast.success('Success', data.message || 'OTP verified successfully.');
         router.push('/login');
       } else {
         // Error response
         const errorMsg = data.detail?.message || data.message || 'Invalid or expired OTP';
-        Alert.alert('Error', errorMsg);
+        toast.error('Error', errorMsg);
       }
     } catch (error) {
       console.error('OTP Verification Error:', error);
-      Alert.alert('Connection Error', 'Could not connect to the server. Please check your internet connection and verify the server is running.');
+      toast.error('Connection Error', 'Could not connect to the server. Please check your internet connection and verify the server is running.');
     } finally {
       setIsLoading(false);
     }

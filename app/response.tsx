@@ -5,8 +5,10 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { toast } from '@/utils/toast';
 
-const LANGUAGES = [
+
+const TONE_OPTIONS = [
   'Warm and Nurturing',
   'Professional',
   'Casual and Friendly',
@@ -15,9 +17,10 @@ const LANGUAGES = [
   'Balanced'
 ];
 
+
 export default function ResponseScreen() {
   const router = useRouter();
-  const [selectedLanguage, setSelectedLanguage] = useState('English');
+  const [selectedTone, setSelectedTone] = useState<string | null>(null);
 
   return (
     <LinearGradient
@@ -50,15 +53,15 @@ export default function ResponseScreen() {
               <Text style={styles.subtitleText}>Choose your preferred tone</Text>
             </View>
 
-            {/* Language Options */}
+            {/* Tone Options */}
             <View style={styles.optionsContainer}>
-              {LANGUAGES.map((lang) => {
-                const isSelected = selectedLanguage === lang;
+              {TONE_OPTIONS.map((tone) => {
+                const isSelected = selectedTone === tone;
                 return (
                   <TouchableOpacity
-                    key={lang}
+                    key={tone}
                     activeOpacity={0.7}
-                    onPress={() => setSelectedLanguage(lang)}
+                    onPress={() => setSelectedTone(tone)}
                     style={[
                       styles.languageOption,
                       isSelected && styles.languageOptionSelected
@@ -66,19 +69,26 @@ export default function ResponseScreen() {
                   >
                     <Text style={[
                       styles.languageText,
-                      isSelected ? { color: '#8A8A8E' } : { color: '#8A8A8E' } // In mockup all options look gray, selected has blue border
+                      isSelected ? { color: '#8A8A8E' } : { color: '#8A8A8E' }
                     ]}>
-                      {lang}
+                      {tone}
                     </Text>
                   </TouchableOpacity>
                 );
               })}
             </View>
 
+
             <AppButton
               title="Next"
               style={styles.nextButton}
-              onPress={() => router.push('/support')}
+              onPress={() => {
+                if (!selectedTone) {
+                  toast.error('Error', 'Please select your preferred response tone');
+                  return;
+                }
+                router.push('/support');
+              }}
             />
           </ScrollView>
         </KeyboardAvoidingView>

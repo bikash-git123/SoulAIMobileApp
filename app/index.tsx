@@ -2,11 +2,12 @@ import { AppButton } from '@/components/ui/AppButton';
 import { Colors } from '@/constants/theme';
 import { Typography } from '@/constants/Typography';
 import { AntDesign, Feather } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View, ActivityIndicator } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect, useState } from 'react';
+import { ActivityIndicator, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { apiClient } from '@/utils/api';
 
 export default function AuthOptionsScreen() {
   const router = useRouter();
@@ -17,7 +18,38 @@ export default function AuthOptionsScreen() {
       try {
         const token = await AsyncStorage.getItem('userToken');
         if (token) {
-          router.replace('/language');
+          try {
+            const response = await apiClient.get('/users/me');
+            
+            // If token was expired (401), apiClient already removed it.
+            // We just need to check if we should proceed.
+            if (response.status === 401) {
+              setIsCheckingToken(false);
+              return;
+            }
+
+            const result = await response.json();
+
+            if (result.success && result.data) {
+              const { full_name, age, country, gender } = result.data;
+              if (full_name && age && country && gender) {
+                router.replace('/onboarding');
+              } else {
+                const missing = [];
+                if (!full_name) missing.push('full_name');
+                if (!age) missing.push('age');
+                if (!country) missing.push('country');
+                if (!gender) missing.push('gender');
+                console.log('Missing profile details:', missing.join(', '));
+                router.replace('/language');
+              }
+            } else {
+              router.replace('/language');
+            }
+          } catch (apiError) {
+            console.error('Error fetching user profile:', apiError);
+            router.replace('/language');
+          }
         }
       } catch (e) {
         console.error('Error checking token:', e);
@@ -79,7 +111,7 @@ export default function AuthOptionsScreen() {
             variant="social"
             icon={<AntDesign name="apple" size={20} color="#000" />}
             style={styles.inputMargin}
-            onPress={() => {}}
+            onPress={() => { }}
           />
 
           <AppButton

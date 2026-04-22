@@ -5,7 +5,8 @@ import { Typography } from '@/constants/Typography';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { Alert, KeyboardAvoidingView, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { toast } from '@/utils/toast';
 
 const VALID_OTP = '2528';
 
@@ -15,15 +16,15 @@ export default function VerifyScreen() {
 
   const handleVerify = () => {
     if (otp.length < 4) {
-      Alert.alert('Incomplete OTP', 'Please enter the 4-digit OTP.');
+      toast.error('Incomplete OTP', 'Please enter the 4-digit OTP.');
       return;
     }
     if (otp !== VALID_OTP) {
-      Alert.alert('Invalid OTP', 'The OTP you entered is incorrect. Please try again.');
+      toast.error('Invalid OTP', 'The OTP you entered is incorrect. Please try again.');
       return;
     }
     // ✅ OTP correct → proceed
-    router.push('/language');
+    router.replace('/language');
   };
 
   return (

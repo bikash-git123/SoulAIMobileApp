@@ -3,10 +3,12 @@ import { Typography } from '@/constants/Typography';
 import { Feather } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
+import { apiClient } from '@/utils/api';
+import { toast } from '@/utils/toast';
 import { useState } from 'react';
-import { KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-const LANGUAGES = [
+const SUPPORT_OPTIONS = [
   'Stress',
   'Relationship',
   'Anxiety',
@@ -17,11 +19,54 @@ const LANGUAGES = [
 
 export default function SupportScreen() {
   const router = useRouter();
-  const [selectedLanguage, setSelectedLanguage] = useState('English');
+  const [selectedSupport, setSelectedSupport] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const toggleSupport = (option: string) => {
+    if (selectedSupport.includes(option)) {
+      setSelectedSupport(selectedSupport.filter(s => s !== option));
+    } else {
+      setSelectedSupport([...selectedSupport, option]);
+    }
+  };
+
+  const handleNext = async () => {
+    if (selectedSupport.length === 0) {
+      toast.error('Error', 'Please select at least one area where you need support');
+      return;
+    }
+
+
+    setIsLoading(true);
+    try {
+      const response = await apiClient.patch('/users/me', {
+        support_types: selectedSupport
+      });
+
+      if (response.status === 401) {
+        toast.error('Session Expired', 'Please login again.');
+        router.replace('/');
+        return;
+      }
+
+      const data = await response.json();
+
+      if (response.ok) {
+        router.replace('/chatstarter');
+      } else {
+        const errorMsg = data.detail?.message || data.message || 'Failed to update support types.';
+        toast.error('Update Failed', errorMsg);
+      }
+    } catch (error) {
+      console.error('Update Support Error:', error);
+      toast.error('Connection Error', 'Could not connect to the server.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <LinearGradient
-      // Approximating the radial gradient from the CSS
       colors={['#FFFFFF', '#E2F4FF']}
       start={{ x: 0.1, y: 0.1 }}
       end={{ x: 1, y: 1 }}
@@ -50,35 +95,38 @@ export default function SupportScreen() {
               <Text style={styles.subtitleText}>Same challenges you’re facing now</Text>
             </View>
 
-            {/* Language Options */}
+            {/* Support Options */}
             <View style={styles.optionsContainer}>
-              {LANGUAGES.map((lang) => {
-                const isSelected = selectedLanguage === lang;
+              {SUPPORT_OPTIONS.map((option) => {
+                const isSelected = selectedSupport.includes(option);
                 return (
                   <TouchableOpacity
-                    key={lang}
+                    key={option}
                     activeOpacity={0.7}
-                    onPress={() => setSelectedLanguage(lang)}
+                    onPress={() => toggleSupport(option)}
                     style={[
-                      styles.languageOption,
-                      isSelected && styles.languageOptionSelected
+                      styles.supportOption,
+                      isSelected && styles.supportOptionSelected
                     ]}
                   >
                     <Text style={[
-                      styles.languageText,
-                      isSelected ? { color: '#8A8A8E' } : { color: '#8A8A8E' } // In mockup all options look gray, selected has blue border
+                      styles.supportText,
+                      { color: '#8A8A8E' }
                     ]}>
-                      {lang}
+                      {option}
                     </Text>
                   </TouchableOpacity>
+
                 );
               })}
             </View>
 
             <AppButton
-              title="Let's talk about it"
+              title={isLoading ? "" : "Let's talk about it"}
               style={styles.nextButton}
-              onPress={() => router.push('/chatstarter')}
+              onPress={handleNext}
+              disabled={isLoading}
+              icon={isLoading ? <ActivityIndicator color="#FFF" /> : undefined}
             />
           </ScrollView>
         </KeyboardAvoidingView>
@@ -144,7 +192,7 @@ const styles = StyleSheet.create({
     width: '100%',
     marginBottom: 32,
   },
-  languageOption: {
+  supportOption: {
     width: '100%',
     height: 60, // slightly taller than standard input based on visual weight
     backgroundColor: 'rgba(255, 255, 255, 0.8)',
@@ -155,14 +203,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     marginBottom: 12,
   },
-  languageOptionSelected: {
+  supportOptionSelected: {
     borderColor: '#3C61DD', // Blue border for selected state
     borderWidth: 1.5,
   },
-  languageText: {
+  supportText: {
     fontFamily: Typography.fonts.regular,
     fontSize: 16,
   },
+
   nextButton: {
     marginTop: 'auto', // Push to bottom
   }

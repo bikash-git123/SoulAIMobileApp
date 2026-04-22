@@ -8,7 +8,8 @@ import { Feather } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { Alert, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View, ActivityIndicator } from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View, ActivityIndicator } from 'react-native';
+import { toast } from '@/utils/toast';
 
 export default function LoginScreen() {
   const router = useRouter();
@@ -19,7 +20,7 @@ export default function LoginScreen() {
 
   const handleLogin = async () => {
     if (!email.trim() || !password) {
-      Alert.alert('Error', 'Please enter both email and password.');
+      toast.error('Error', 'Please enter both email and password.');
       return;
     }
 
@@ -43,17 +44,17 @@ export default function LoginScreen() {
         // Success response
         // { "success": true, "message": "Login successful", "data": { "access_token": "..." } }
         await AsyncStorage.setItem('userToken', data.data.access_token);
-        Alert.alert('Success', data.message || 'Login successful');
-        router.push('/language');
+        toast.success('Success', data.message || 'Login successful');
+        router.replace('/language');
       } else {
         // Error response
         // { "detail": { "success": false, "message": "Invalid credentials", "data": null } }
         const errorMsg = data.detail?.message || data.message || 'Login failed. Please check your credentials.';
-        Alert.alert('Error', errorMsg);
+        toast.error('Error', errorMsg);
       }
     } catch (error) {
       console.error('Login Error:', error);
-      Alert.alert('Connection Error', 'Could not connect to the server. Please check your internet connection.');
+      toast.error('Connection Error', 'Could not connect to the server. Please check your internet connection.');
     } finally {
       setIsLoading(false);
     }

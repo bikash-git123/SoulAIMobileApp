@@ -3,10 +3,25 @@ import { Typography } from '@/constants/Typography';
 import { Feather } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
-import { KeyboardAvoidingView, Platform, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { BackHandler, KeyboardAvoidingView, Platform, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useEffect } from 'react';
 
 export default function OnboardingScreen() {
   const router = useRouter();
+
+  useEffect(() => {
+    const backAction = () => {
+      BackHandler.exitApp();
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+
+    return () => backHandler.remove();
+  }, []);
 
   return (
     <LinearGradient
@@ -22,7 +37,7 @@ export default function OnboardingScreen() {
         >
           {/* Top Navigation & Progress */}
           <View style={styles.topNavContainer}>
-            <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+            <TouchableOpacity onPress={() => BackHandler.exitApp()} style={styles.backButton}>
               <Feather name="arrow-left" size={24} color="#111111" />
             </TouchableOpacity>
             <View style={styles.progressTrack}>

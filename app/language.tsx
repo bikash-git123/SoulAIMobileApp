@@ -3,8 +3,10 @@ import { Typography } from '@/constants/Typography';
 import { Feather } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
-import { useState } from 'react';
-import { Platform, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useEffect, useState } from 'react';
+import { BackHandler, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { toast } from '@/utils/toast';
+
 
 const LANGUAGES = [
   'English',
@@ -12,17 +14,31 @@ const LANGUAGES = [
   'Marathi',
   'Gujarati',
   'Odia',
-  'Tamil',
-  'Telugu',
-  'Kannada',
-  'Malayalam',
-  'Punjabi',
-  'Bengali'
+  // 'Tamil',
+  // 'Telugu',
+  // 'Kannada',
+  // 'Malayalam',
+  // 'Punjabi',
+  // 'Bengali'
 ];
 
 export default function LanguageScreen() {
   const router = useRouter();
-  const [selectedLanguage, setSelectedLanguage] = useState('English');
+  const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
+
+  useEffect(() => {
+    const backAction = () => {
+      BackHandler.exitApp();
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+
+    return () => backHandler.remove();
+  }, []);
 
   return (
     <LinearGradient
@@ -36,7 +52,7 @@ export default function LanguageScreen() {
 
         {/* Top Navigation & Progress */}
         <View style={styles.topNavContainer}>
-          <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+          <TouchableOpacity onPress={() => BackHandler.exitApp()} style={styles.backButton}>
             <Feather name="arrow-left" size={24} color="#111111" />
           </TouchableOpacity>
           <View style={styles.progressTrack}>
@@ -80,10 +96,16 @@ export default function LanguageScreen() {
           <AppButton
             title="Next"
             style={styles.nextButton}
-            onPress={() => router.push({
-              pathname: '/fullname',
-              params: { language: selectedLanguage }
-            })}
+            onPress={() => {
+              if (!selectedLanguage) {
+                toast.error('Error', 'Please select your preferred language');
+                return;
+              }
+              router.push({
+                pathname: '/fullname',
+                params: { language: selectedLanguage }
+              });
+            }}
           />
         </ScrollView>
       </SafeAreaView>
