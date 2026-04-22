@@ -49,10 +49,7 @@ const THERAPY_TYPES = [
   { id: "6", title: "Solution focused", color: Colors.therapy.purple },
 ];
 
-const CHAT_PROMPTS = [
-  "I want to talk about my mood",
-  "I wish to talk about my day",
-];
+const CHAT_PROMPTS = ["I want to talk about my mood", "I wish to talk about my day"];
 
 export default function ChatStarterScreen() {
   const router = useRouter();
@@ -68,10 +65,7 @@ export default function ChatStarterScreen() {
       end={{ x: 1, y: 1 }}
       style={styles.container}
     >
-      <SafeAreaView
-        style={styles.safeArea}
-        edges={["top", "left", "right", "bottom"]}
-      >
+      <SafeAreaView style={styles.safeArea} edges={["top", "left", "right", "bottom"]}>
         <KeyboardAvoidingView
           style={styles.flex1}
           behavior={Platform.OS === "ios" ? "padding" : undefined}
@@ -82,17 +76,14 @@ export default function ChatStarterScreen() {
             {/* Top Bar */}
             <View style={styles.topBar}>
               <TouchableOpacity
-                onPress={() => { }}
+                onPress={() => {}}
                 hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
               >
                 <Feather name="menu" size={normalize(28)} color="#333" />
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => { }}>
+              <TouchableOpacity onPress={() => {}}>
                 <View style={styles.avatarContainer}>
-                  <Image
-                    source={require("@/assets/images/avatar.png")}
-                    style={styles.avatar}
-                  />
+                  <Image source={require("@/assets/images/avatar.png")} style={styles.avatar} />
                 </View>
               </TouchableOpacity>
             </View>
@@ -117,11 +108,8 @@ export default function ChatStarterScreen() {
                   <TouchableOpacity
                     key={item.id}
                     activeOpacity={0.8}
-                    onPress={() => { }}
-                    style={[
-                      styles.therapyButton,
-                      { backgroundColor: item.color },
-                    ]}
+                    onPress={() => {}}
+                    style={[styles.therapyButton, { backgroundColor: item.color }]}
                   >
                     <Text style={styles.therapyButtonText}>{item.title}</Text>
                   </TouchableOpacity>
@@ -131,11 +119,7 @@ export default function ChatStarterScreen() {
               {/* Chat Prompts */}
               <View style={styles.promptsContainer}>
                 {CHAT_PROMPTS.map((prompt, index) => (
-                  <TouchableOpacity
-                    key={index}
-                    style={styles.promptCard}
-                    activeOpacity={0.7}
-                  >
+                  <TouchableOpacity key={index} style={styles.promptCard} activeOpacity={0.7}>
                     <View style={styles.dot} />
                     <Text style={styles.promptText}>{prompt}</Text>
                   </TouchableOpacity>
@@ -159,11 +143,7 @@ export default function ChatStarterScreen() {
                   <Feather name="mic" size={normalize(24)} color="#333" />
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.iconButton}>
-                  <Ionicons
-                    name="paper-plane-outline"
-                    size={normalize(24)}
-                    color="#333"
-                  />
+                  <Ionicons name="paper-plane-outline" size={normalize(24)} color="#333" />
                 </TouchableOpacity>
               </View>
             </View>

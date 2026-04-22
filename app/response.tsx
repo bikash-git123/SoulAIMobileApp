@@ -1,22 +1,29 @@
-import { AppButton } from '@/components/ui/AppButton';
-import { Typography } from '@/constants/Typography';
-import { Feather } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
-import { useRouter } from 'expo-router';
-import { useState } from 'react';
-import { KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { toast } from '@/utils/toast';
-
+import { AppButton } from "@/components/ui/AppButton";
+import { Typography } from "@/constants/Typography";
+import { Feather } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
+import { useRouter } from "expo-router";
+import { useState } from "react";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { toast } from "@/utils/toast";
 
 const TONE_OPTIONS = [
-  'Warm and Nurturing',
-  'Professional',
-  'Casual and Friendly',
-  'Direct and Straightforward',
-  'Motivational',
-  'Balanced'
+  "Warm and Nurturing",
+  "Professional",
+  "Casual and Friendly",
+  "Direct and Straightforward",
+  "Motivational",
+  "Balanced",
 ];
-
 
 export default function ResponseScreen() {
   const router = useRouter();
@@ -25,16 +32,15 @@ export default function ResponseScreen() {
   return (
     <LinearGradient
       // Approximating the radial gradient from the CSS
-      colors={['#FFFFFF', '#E2F4FF']}
+      colors={["#FFFFFF", "#E2F4FF"]}
       start={{ x: 0.1, y: 0.1 }}
       end={{ x: 1, y: 1 }}
       style={styles.container}
     >
       <SafeAreaView style={styles.safeArea}>
-
         <KeyboardAvoidingView
           style={{ flex: 1 }}
-          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          behavior={Platform.OS === "ios" ? "padding" : undefined}
         >
           {/* Top Navigation & Progress */}
           <View style={styles.topNavContainer}>
@@ -49,7 +55,7 @@ export default function ResponseScreen() {
           <ScrollView contentContainerStyle={styles.scrollContainer} bounces={false}>
             {/* Header */}
             <View style={styles.header}>
-              <Text style={styles.titleText}>How should I respond{'\n'}to you?</Text>
+              <Text style={styles.titleText}>How should I respond{"\n"}to you?</Text>
               <Text style={styles.subtitleText}>Choose your preferred tone</Text>
             </View>
 
@@ -62,15 +68,14 @@ export default function ResponseScreen() {
                     key={tone}
                     activeOpacity={0.7}
                     onPress={() => setSelectedTone(tone)}
-                    style={[
-                      styles.languageOption,
-                      isSelected && styles.languageOptionSelected
-                    ]}
+                    style={[styles.languageOption, isSelected && styles.languageOptionSelected]}
                   >
-                    <Text style={[
-                      styles.languageText,
-                      isSelected ? { color: '#8A8A8E' } : { color: '#8A8A8E' }
-                    ]}>
+                    <Text
+                      style={[
+                        styles.languageText,
+                        isSelected ? { color: "#8A8A8E" } : { color: "#8A8A8E" },
+                      ]}
+                    >
                       {tone}
                     </Text>
                   </TouchableOpacity>
@@ -78,16 +83,15 @@ export default function ResponseScreen() {
               })}
             </View>
 
-
             <AppButton
               title="Next"
               style={styles.nextButton}
               onPress={() => {
                 if (!selectedTone) {
-                  toast.error('Error', 'Please select your preferred response tone');
+                  toast.error("Error", "Please select your preferred response tone");
                   return;
                 }
-                router.push('/support');
+                router.push("/support");
               }}
             />
           </ScrollView>
@@ -103,11 +107,11 @@ const styles = StyleSheet.create({
   },
   safeArea: {
     flex: 1,
-    paddingTop: Platform.OS === 'android' ? 40 : 0,
+    paddingTop: Platform.OS === "android" ? 40 : 0,
   },
   topNavContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: 24,
     paddingTop: 16,
     paddingBottom: 24,
@@ -119,14 +123,14 @@ const styles = StyleSheet.create({
   progressTrack: {
     flex: 1,
     height: 4,
-    backgroundColor: 'rgba(60, 97, 221, 0.1)', // Light blue track
+    backgroundColor: "rgba(60, 97, 221, 0.1)", // Light blue track
     borderRadius: 2,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   progressFill: {
-    width: '78%', // Adjusted for consistent flow (65% + 13%)
-    height: '100%',
-    backgroundColor: '#3C61DD', // Primary blue
+    width: "78%", // Adjusted for consistent flow (65% + 13%)
+    height: "100%",
+    backgroundColor: "#3C61DD", // Primary blue
   },
   scrollContainer: {
     flexGrow: 1,
@@ -134,39 +138,39 @@ const styles = StyleSheet.create({
     paddingBottom: 40,
   },
   header: {
-    alignItems: 'center',
-    marginBottom: 40
+    alignItems: "center",
+    marginBottom: 40,
   },
   titleText: {
     fontFamily: Typography.fonts.regular,
     fontSize: 30, // Large title
-    color: '#111111',
-    textAlign: 'center',
-    marginBottom: 12
+    color: "#111111",
+    textAlign: "center",
+    marginBottom: 12,
   },
   subtitleText: {
     fontFamily: Typography.fonts.regular,
     fontSize: Typography.sizes.subtitle,
-    color: '#8A8A8E',
-    textAlign: 'center',
+    color: "#8A8A8E",
+    textAlign: "center",
   },
   optionsContainer: {
-    width: '100%',
+    width: "100%",
     marginBottom: 15,
   },
   languageOption: {
-    width: '100%',
+    width: "100%",
     height: 60, // slightly taller than standard input based on visual weight
-    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.65)',
+    borderColor: "rgba(255, 255, 255, 0.65)",
     borderRadius: 8,
-    justifyContent: 'center',
+    justifyContent: "center",
     paddingHorizontal: 16,
     marginBottom: 12,
   },
   languageOptionSelected: {
-    borderColor: '#3C61DD', // Blue border for selected state
+    borderColor: "#3C61DD", // Blue border for selected state
     borderWidth: 1.5,
   },
   languageText: {
@@ -175,5 +179,5 @@ const styles = StyleSheet.create({
   },
   nextButton: {
     // marginTop: 10,
-  }
+  },
 });
