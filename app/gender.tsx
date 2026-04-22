@@ -1,17 +1,16 @@
 import { AppButton } from '@/components/ui/AppButton';
 import { AppInput } from '@/components/ui/AppInput';
-import { apiClient } from '@/utils/api';
 import { Typography } from '@/constants/Typography';
+import { apiClient } from '@/utils/api';
 import { toast } from '@/utils/toast';
 import { Feather } from '@expo/vector-icons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { ActivityIndicator, KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 const COUNTRIES = ['India', 'USA', 'United Kingdom', 'Canada', 'Australia', 'Germany', 'France'];
-const GENDERS = ['Male', 'Female'];
+const GENDERS = ['Male', 'Female', 'Other'];
 
 export default function GenderScreen() {
   const router = useRouter();
