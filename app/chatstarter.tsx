@@ -74,8 +74,8 @@ export default function ChatStarterScreen() {
       >
         <KeyboardAvoidingView
           style={styles.flex1}
-          behavior={Platform.OS === "ios" ? "padding" : undefined}
-          keyboardVerticalOffset={Platform.OS === "ios" ? 0 : normalize(20)}
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
         >
           {/* Main Content Area */}
           <View style={styles.flex1}>
@@ -102,6 +102,7 @@ export default function ChatStarterScreen() {
               contentContainerStyle={styles.scrollContent}
               showsVerticalScrollIndicator={false}
               bounces={true}
+              keyboardShouldPersistTaps="handled"
             >
               {/* Greeting Header */}
               <View style={styles.header}>
@@ -155,16 +156,19 @@ export default function ChatStarterScreen() {
                     onChangeText={setInputText}
                   />
                 </View>
-                <TouchableOpacity style={styles.iconButton}>
-                  <Feather name="mic" size={normalize(24)} color="#333" />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.iconButton}>
-                  <Ionicons
-                    name="paper-plane-outline"
-                    size={normalize(24)}
-                    color="#333"
-                  />
-                </TouchableOpacity>
+                {inputText.trim() === "" ? (
+                  <TouchableOpacity style={styles.iconButton}>
+                    <Feather name="mic" size={normalize(24)} color="#333" />
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity style={styles.iconButton}>
+                    <Ionicons
+                      name="paper-plane-outline"
+                      size={normalize(24)}
+                      color="#3C61DD"
+                    />
+                  </TouchableOpacity>
+                )}
               </View>
             </View>
           </View>
