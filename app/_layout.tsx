@@ -8,10 +8,10 @@ import'react-native-reanimated';
 import Toast from 'react-native-toast-message';
 import { toastConfig } from '@/components/ToastConfig';
 
-import { useColorScheme } from '@/hooks/use-color-scheme';
+import { useColorScheme } from "@/hooks/use-color-scheme";
 
 export const unstable_settings = {
-  anchor: '(tabs)',
+  anchor: "(tabs)",
 };
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
