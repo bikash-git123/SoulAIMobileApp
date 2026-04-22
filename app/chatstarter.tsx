@@ -82,12 +82,12 @@ export default function ChatStarterScreen() {
             {/* Top Bar */}
             <View style={styles.topBar}>
               <TouchableOpacity
-                onPress={() => {}}
+                onPress={() => { }}
                 hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
               >
                 <Feather name="menu" size={normalize(28)} color="#333" />
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => {}}>
+              <TouchableOpacity onPress={() => { }}>
                 <View style={styles.avatarContainer}>
                   <Image
                     source={require("@/assets/images/avatar.png")}
@@ -108,7 +108,7 @@ export default function ChatStarterScreen() {
                 <Text style={styles.greetingText}>
                   Hello {displayName}, How{"\n"}can I help you?
                 </Text>
-                <Text style={styles.updateText}>Last Update: 12.02.26</Text>
+                <Text style={styles.updateText}>Last Update: 22.04.26</Text>
               </View>
 
               {/* Therapy Type Buttons */}
@@ -117,7 +117,7 @@ export default function ChatStarterScreen() {
                   <TouchableOpacity
                     key={item.id}
                     activeOpacity={0.8}
-                    onPress={() => {}}
+                    onPress={() => { }}
                     style={[
                       styles.therapyButton,
                       { backgroundColor: item.color },
@@ -254,7 +254,7 @@ const styles = StyleSheet.create({
   promptsContainer: {
     marginBottom: normalize(20),
     alignItems: "center",
-    // marginTop: normalize(30),
+    marginTop: normalize(30),
   },
   promptCard: {
     flexDirection: "row",

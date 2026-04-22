@@ -1,15 +1,15 @@
 import { AppButton } from '@/components/ui/AppButton';
 import { AppInput } from '@/components/ui/AppInput';
-import { Colors } from '@/constants/theme';
 import { API_BASE_URL } from '@/constants/Config';
+import { Colors } from '@/constants/theme';
 import { Typography } from '@/constants/Typography';
+import { toast } from '@/utils/toast';
+import { AntDesign, Feather } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Feather } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View, ActivityIndicator } from 'react-native';
-import { toast } from '@/utils/toast';
+import { ActivityIndicator, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function LoginScreen() {
   const router = useRouter();
@@ -74,7 +74,7 @@ export default function LoginScreen() {
           {/* Header */}
           <View style={styles.header}>
             <Text style={styles.titleText}>Soul AI</Text>
-            <Text style={styles.subtitleText}>Log in to your Soul AI account</Text>
+            <Text style={styles.subtitleText}>Sign in to your Soul AI account</Text>
           </View>
 
           {/* Form */}
@@ -115,6 +115,29 @@ export default function LoginScreen() {
               <TouchableOpacity activeOpacity={0.7} onPress={() => { }}>
                 <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
               </TouchableOpacity>
+            </View>
+
+            {/* Social Divider */}
+            <View style={styles.dividerContainer}>
+              <Text style={styles.dividerText}>Or sign in with</Text>
+            </View>
+
+            {/* Social Buttons */}
+            <View style={styles.socialContainer}>
+              <AppButton
+                title="Continue with Apple"
+                variant="social"
+                icon={<AntDesign name="apple" size={20} color="#000" />}
+                style={styles.socialBtnMargin}
+                onPress={() => { }}
+              />
+
+              <AppButton
+                title="Continue with Google"
+                variant="social"
+                icon={<AntDesign name="google" size={20} color="#DB4437" />}
+                onPress={() => { }}
+              />
             </View>
           </View>
 

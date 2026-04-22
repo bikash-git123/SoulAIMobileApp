@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
   },
   optionsContainer: {
     width: '100%',
-    marginBottom: 32,
+    marginBottom: 15,
   },
   languageOption: {
     width: '100%',
@@ -174,6 +174,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   nextButton: {
-    marginTop: 'auto', // Push to bottom
+    // marginTop: 10,
   }
 });

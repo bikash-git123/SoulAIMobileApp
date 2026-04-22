@@ -1,11 +1,11 @@
 import { AppButton } from '@/components/ui/AppButton';
 import { Typography } from '@/constants/Typography';
+import { toast } from '@/utils/toast';
 import { Feather } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { BackHandler, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { toast } from '@/utils/toast';
 
 
 const LANGUAGES = [
@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
   },
   optionsContainer: {
     width: '100%',
-    marginBottom: 32,
+    marginBottom: 15,
   },
   languageOption: {
     width: '100%',
@@ -190,6 +190,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   nextButton: {
-    marginTop: 'auto', // Push to bottom
+    // marginTop: 10,
   }
 });

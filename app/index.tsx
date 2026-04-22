@@ -1,13 +1,13 @@
 import { AppButton } from '@/components/ui/AppButton';
 import { Colors } from '@/constants/theme';
 import { Typography } from '@/constants/Typography';
+import { apiClient } from '@/utils/api';
 import { AntDesign, Feather } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { apiClient } from '@/utils/api';
 
 export default function AuthOptionsScreen() {
   const router = useRouter();
@@ -20,7 +20,7 @@ export default function AuthOptionsScreen() {
         if (token) {
           try {
             const response = await apiClient.get('/users/me');
-            
+
             // If token was expired (401), apiClient already removed it.
             // We just need to check if we should proceed.
             if (response.status === 401) {
@@ -82,13 +82,14 @@ export default function AuthOptionsScreen() {
         {/* Header (same as first screen) */}
         <View style={styles.header}>
           <Text style={styles.titleText}>Welcome to Soul AI</Text>
-          <Text style={styles.subtitleText}>
-            Sign in to Personalize your{"\n"}Therapy AI Companion
-          </Text>
         </View>
 
         {/* Buttons (acts like formContainer) */}
         <View style={styles.formContainer}>
+
+          <Text style={[styles.subtitleText, { marginBottom: 30 }]}>
+            Sign in to Personalize your{"\n"}Therapy AI Companion
+          </Text>
 
           <AppButton
             title="Continue with Phone Number"
@@ -161,7 +162,7 @@ const styles = StyleSheet.create({
   /* SAME HEADER STRUCTURE */
   header: {
     alignItems: 'center',
-    marginBottom: 80,
+    marginBottom: 120,
   },
 
   titleText: {
