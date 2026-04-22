@@ -216,14 +216,14 @@ const styles = StyleSheet.create({
   },
   greetingText: {
     fontFamily: Typography.fonts.medium,
-    fontSize: normalize(28),
+    fontSize: normalize(32),
     color: "#000",
     textAlign: "center",
-    lineHeight: normalize(38),
+    lineHeight: normalize(42),
   },
   updateText: {
     fontFamily: Typography.fonts.regular,
-    fontSize: normalize(14),
+    fontSize: normalize(16),
     color: "#8A8A8A",
     marginTop: normalize(8),
   },
@@ -247,14 +247,14 @@ const styles = StyleSheet.create({
   },
   therapyButtonText: {
     fontFamily: Typography.fonts.medium,
-    fontSize: normalize(15),
+    fontSize: normalize(18),
     color: "#FFF",
     textAlign: "center",
   },
   promptsContainer: {
     marginBottom: normalize(20),
     alignItems: "center",
-    marginTop: normalize(30),
+    // marginTop: normalize(30),
   },
   promptCard: {
     flexDirection: "row",
@@ -280,7 +280,7 @@ const styles = StyleSheet.create({
   },
   promptText: {
     fontFamily: Typography.fonts.regular,
-    fontSize: normalize(16),
+    fontSize: normalize(18),
     color: "#333",
   },
   bottomBarContainer: {
@@ -304,7 +304,7 @@ const styles = StyleSheet.create({
   },
   input: {
     fontFamily: Typography.fonts.regular,
-    fontSize: normalize(16),
+    fontSize: normalize(18),
     color: "#333",
   },
   iconButton: {
