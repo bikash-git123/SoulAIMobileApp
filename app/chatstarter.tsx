@@ -156,19 +156,16 @@ export default function ChatStarterScreen() {
                     onChangeText={setInputText}
                   />
                 </View>
-                {inputText.trim() === "" ? (
-                  <TouchableOpacity style={styles.iconButton}>
-                    <Feather name="mic" size={normalize(24)} color="#333" />
-                  </TouchableOpacity>
-                ) : (
-                  <TouchableOpacity style={styles.iconButton}>
-                    <Ionicons
-                      name="paper-plane-outline"
-                      size={normalize(24)}
-                      color="#3C61DD"
-                    />
-                  </TouchableOpacity>
-                )}
+                <TouchableOpacity style={styles.iconButton}>
+                  <Feather name="mic" size={normalize(24)} color="#333" />
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.iconButton}>
+                  <Ionicons
+                    name="paper-plane-outline"
+                    size={normalize(24)}
+                    color="#333"
+                  />
+                </TouchableOpacity>
               </View>
             </View>
           </View>
