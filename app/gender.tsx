@@ -1,11 +1,14 @@
 import { AppButton } from '@/components/ui/AppButton';
 import { AppInput } from '@/components/ui/AppInput';
+import { apiClient } from '@/utils/api';
 import { Typography } from '@/constants/Typography';
+import { toast } from '@/utils/toast';
 import { Feather } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
-import { KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 const COUNTRIES = ['India', 'USA', 'United Kingdom', 'Canada', 'Australia', 'Germany', 'France'];
 const GENDERS = ['Male', 'Female'];
@@ -19,6 +22,7 @@ export default function GenderScreen() {
 
   const [showCountryDropdown, setShowCountryDropdown] = useState(false);
   const [showGenderDropdown, setShowGenderDropdown] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Filter countries based on search query
   const filteredCountries = useMemo(() => {
@@ -27,6 +31,44 @@ export default function GenderScreen() {
       c.toLowerCase().includes(countrySearch.toLowerCase())
     );
   }, [countrySearch]);
+
+  const handleNext = async () => {
+    if (!age || !countrySearch || !selectedGender) {
+      toast.error('Required Fields', 'Please fill in all details to continue.');
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const response = await apiClient.patch('/users/me', {
+        full_name: fullName,
+        age: parseInt(age),
+        country: countrySearch,
+        gender: selectedGender
+      });
+
+      if (response.status === 401) {
+        toast.error('Session Expired', 'Please login again.');
+        router.replace('/');
+        return;
+      }
+
+      const data = await response.json();
+
+      if (response.ok) {
+        router.replace('/onboarding');
+      } else {
+        console.log(data);
+        const errorMsg = data.detail?.message || data.message || 'Failed to update profile.';
+        toast.error('Update Failed', errorMsg);
+      }
+    } catch (error) {
+      console.error('Update Profile Error:', error);
+      toast.error('Connection Error', 'Could not connect to the server.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const renderDropdown = (options: string[], onSelect: (val: string) => void, visible: boolean, onClose: () => void) => {
     if (!visible || options.length === 0) return null;
@@ -136,9 +178,11 @@ export default function GenderScreen() {
               </View>
 
               <AppButton
-                title="Next"
+                title={isLoading ? "" : "Next"}
                 style={styles.nextButton}
-                onPress={() => router.push('/onboarding')}
+                onPress={handleNext}
+                disabled={isLoading}
+                icon={isLoading ? <ActivityIndicator color="#FFF" /> : undefined}
               />
             </View>
           </ScrollView>

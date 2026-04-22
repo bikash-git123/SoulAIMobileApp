@@ -183,7 +183,7 @@ const styles = StyleSheet.create({
   },
   therapyList: {
     alignItems: 'center',
-    marginBottom: 80,
+    marginBottom: 90,
   },
   therapyButton: {
     paddingVertical: 12,
@@ -217,7 +217,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 24,
     borderRadius: 30,
-    marginBottom: 12,
+    marginBottom: 8,
     // Soft shadow like image
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },

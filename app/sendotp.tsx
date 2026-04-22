@@ -5,7 +5,8 @@ import { Typography } from '@/constants/Typography';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { Alert, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { toast } from '@/utils/toast';
 
 export default function LoginScreen() {
     const router = useRouter();
@@ -16,8 +17,13 @@ export default function LoginScreen() {
     const handleLogin = () => {
         const phoneRegex = /^[0-9]{10}$/;
 
+        if (!phone.trim()) {
+            toast.error('Error', 'Please enter your phone number.');
+            return;
+        }
+
         if (!phoneRegex.test(phone)) {
-            Alert.alert('Invalid Phone Number', 'Please enter a valid 10-digit phone number');
+            toast.error('Invalid Phone Number', 'Please enter a valid 10-digit phone number');
             return;
         }
 

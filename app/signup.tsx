@@ -7,7 +7,8 @@ import { AntDesign, Feather } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { Alert, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View, ActivityIndicator } from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View, ActivityIndicator } from 'react-native';
+import { toast } from '@/utils/toast';
 
 // Remove constant VALID_EMAIL as we are using a real API now
 
@@ -22,24 +23,24 @@ export default function SignupScreen() {
 
   const handleSendOtp = async () => {
     if (!email.trim()) {
-      Alert.alert('Error', 'Please enter your email address.');
+      toast.error('Error', 'Please enter your email address.');
       return;
     }
     
     // Simple email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email.trim())) {
-      Alert.alert('Error', 'Please enter a valid email address.');
+      toast.error('Error', 'Please enter a valid email address.');
       return;
     }
 
     if (!password) {
-      Alert.alert('Error', 'Please enter a password.');
+      toast.error('Error', 'Please enter a password.');
       return;
     }
 
     if (password !== confirmPassword) {
-      Alert.alert('Error', 'Passwords do not match.');
+      toast.error('Error', 'Passwords do not match.');
       return;
     }
 
@@ -62,7 +63,7 @@ export default function SignupScreen() {
       if (response.ok) {
         // Success response
         // { "success": true, "message": "...", "data": { ... } }
-        Alert.alert('Success', data.message || 'OTP sent to your email.');
+        toast.success('Success', data.message || 'OTP sent to your email.');
         router.push({
           pathname: '/emailverify',
           params: { email: email.trim() }
@@ -70,14 +71,14 @@ export default function SignupScreen() {
       } else if (response.status === 422) {
         // Validation error
         const errorMsg = data.detail?.[0]?.msg || 'Validation error';
-        Alert.alert('Error', errorMsg);
+        toast.error('Error', errorMsg);
       } else {
         // Other errors
-        Alert.alert('Error', data.message || 'Registration failed. Please try again.');
+        toast.error('Error', data.message || 'Registration failed. Please try again.');
       }
     } catch (error) {
       console.error('Registration Error:', error);
-      Alert.alert('Connection Error', 'Could not connect to the server. If you are using a physical device, please use your machine\'s IP address instead of localhost.');
+      toast.error('Connection Error', 'Could not connect to the server. If you are using a physical device, please use your machine\'s IP address instead of localhost.');
     } finally {
       setIsLoading(false);
     }
