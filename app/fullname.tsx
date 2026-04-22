@@ -6,6 +6,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { toast } from '@/utils/toast';
+
 
 export default function FullnameScreen() {
   const router = useRouter();
@@ -51,14 +53,20 @@ export default function FullnameScreen() {
               // No icon is passed to match the design EXACTLY
               />
 
-              <AppButton
-                title="Next"
-                style={styles.nextButton}
-                onPress={() => router.push({
-                  pathname: '/gender',
-                  params: { language, fullName: name }
-                })}
-              />
+               <AppButton
+                 title="Next"
+                 style={styles.nextButton}
+                 onPress={() => {
+                   if (!name.trim()) {
+                     toast.error('Error', 'Please enter your full name');
+                     return;
+                   }
+                   router.push({
+                     pathname: '/gender',
+                     params: { language, fullName: name }
+                   });
+                 }}
+               />
             </View>
           </ScrollView>
         </KeyboardAvoidingView>

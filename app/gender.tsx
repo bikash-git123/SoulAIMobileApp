@@ -33,8 +33,16 @@ export default function GenderScreen() {
   }, [countrySearch]);
 
   const handleNext = async () => {
-    if (!age || !countrySearch || !selectedGender) {
-      toast.error('Required Fields', 'Please fill in all details to continue.');
+    if (!age.trim()) {
+      toast.error('Error', 'Please enter your age');
+      return;
+    }
+    if (!countrySearch.trim()) {
+      toast.error('Error', 'Please select your country');
+      return;
+    }
+    if (!selectedGender) {
+      toast.error('Error', 'Please select your gender');
       return;
     }
 

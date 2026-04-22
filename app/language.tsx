@@ -5,6 +5,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { BackHandler, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { toast } from '@/utils/toast';
+
 
 const LANGUAGES = [
   'English',
@@ -22,7 +24,7 @@ const LANGUAGES = [
 
 export default function LanguageScreen() {
   const router = useRouter();
-  const [selectedLanguage, setSelectedLanguage] = useState('English');
+  const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
 
   useEffect(() => {
     const backAction = () => {
@@ -94,10 +96,16 @@ export default function LanguageScreen() {
           <AppButton
             title="Next"
             style={styles.nextButton}
-            onPress={() => router.push({
-              pathname: '/fullname',
-              params: { language: selectedLanguage }
-            })}
+            onPress={() => {
+              if (!selectedLanguage) {
+                toast.error('Error', 'Please select your preferred language');
+                return;
+              }
+              router.push({
+                pathname: '/fullname',
+                params: { language: selectedLanguage }
+              });
+            }}
           />
         </ScrollView>
       </SafeAreaView>

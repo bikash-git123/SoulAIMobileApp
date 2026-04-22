@@ -32,9 +32,10 @@ export default function SupportScreen() {
 
   const handleNext = async () => {
     if (selectedSupport.length === 0) {
-      toast.error('Required', 'Please select at least one area where you need support.');
+      toast.error('Error', 'Please select at least one area where you need support');
       return;
     }
+
 
     setIsLoading(true);
     try {
@@ -104,17 +105,18 @@ export default function SupportScreen() {
                     activeOpacity={0.7}
                     onPress={() => toggleSupport(option)}
                     style={[
-                      styles.languageOption,
-                      isSelected && styles.languageOptionSelected
+                      styles.supportOption,
+                      isSelected && styles.supportOptionSelected
                     ]}
                   >
                     <Text style={[
-                      styles.languageText,
+                      styles.supportText,
                       { color: '#8A8A8E' }
                     ]}>
                       {option}
                     </Text>
                   </TouchableOpacity>
+
                 );
               })}
             </View>
@@ -190,7 +192,7 @@ const styles = StyleSheet.create({
     width: '100%',
     marginBottom: 32,
   },
-  languageOption: {
+  supportOption: {
     width: '100%',
     height: 60, // slightly taller than standard input based on visual weight
     backgroundColor: 'rgba(255, 255, 255, 0.8)',
@@ -201,14 +203,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     marginBottom: 12,
   },
-  languageOptionSelected: {
+  supportOptionSelected: {
     borderColor: '#3C61DD', // Blue border for selected state
     borderWidth: 1.5,
   },
-  languageText: {
+  supportText: {
     fontFamily: Typography.fonts.regular,
     fontSize: 16,
   },
+
   nextButton: {
     marginTop: 'auto', // Push to bottom
   }
