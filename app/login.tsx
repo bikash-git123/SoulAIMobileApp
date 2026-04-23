@@ -1,11 +1,11 @@
 import { AppButton } from "@/components/ui/AppButton";
 import { AppInput } from "@/components/ui/AppInput";
 import { API_BASE_URL } from "@/constants/Config";
+import { storage } from "@/utils/storage";
 import { Colors } from "@/constants/theme";
 import { Typography } from "@/constants/Typography";
 import { toast } from "@/utils/toast";
 import { AntDesign, Feather } from "@expo/vector-icons";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import { useState } from "react";
@@ -53,8 +53,8 @@ export default function LoginScreen() {
         // Success response
         // { "success": true, "message": "Login successful", "data": { "access_token": "..." } }
         await storage.setToken(data.data.access_token);
-        toast.success('Success', data.message || 'Login successful');
-        router.replace('/language');
+        toast.success("Success", data.message || "Login successful");
+        router.replace("/language");
       } else {
         // Error response
         // { "detail": { "success": false, "message": "Invalid credentials", "data": null } }
