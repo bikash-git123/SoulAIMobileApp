@@ -52,9 +52,9 @@ export default function LoginScreen() {
       if (response.ok) {
         // Success response
         // { "success": true, "message": "Login successful", "data": { "access_token": "..." } }
-        await AsyncStorage.setItem("userToken", data.data.access_token);
-        toast.success("Success", data.message || "Login successful");
-        router.replace("/language");
+        await storage.setToken(data.data.access_token);
+        toast.success('Success', data.message || 'Login successful');
+        router.replace('/language');
       } else {
         // Error response
         // { "detail": { "success": false, "message": "Invalid credentials", "data": null } }

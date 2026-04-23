@@ -23,7 +23,7 @@ export default function AuthOptionsScreen() {
   useEffect(() => {
     const checkToken = async () => {
       try {
-        const token = await AsyncStorage.getItem("userToken");
+        const token = await storage.getToken();
         if (token) {
           try {
             const response = await apiClient.get("/users/me");
