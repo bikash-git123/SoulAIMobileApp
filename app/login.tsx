@@ -1,26 +1,35 @@
-import { AppButton } from '@/components/ui/AppButton';
-import { AppInput } from '@/components/ui/AppInput';
-import { API_BASE_URL } from '@/constants/Config';
-import { Colors } from '@/constants/theme';
-import { Typography } from '@/constants/Typography';
-import { toast } from '@/utils/toast';
-import { AntDesign, Feather } from '@expo/vector-icons';
-import { storage } from '@/utils/storage';
-import { LinearGradient } from 'expo-linear-gradient';
-import { useRouter } from 'expo-router';
-import { useState } from 'react';
-import { ActivityIndicator, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { AppButton } from "@/components/ui/AppButton";
+import { AppInput } from "@/components/ui/AppInput";
+import { API_BASE_URL } from "@/constants/Config";
+import { Colors } from "@/constants/theme";
+import { Typography } from "@/constants/Typography";
+import { toast } from "@/utils/toast";
+import { AntDesign, Feather } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { LinearGradient } from "expo-linear-gradient";
+import { useRouter } from "expo-router";
+import { useState } from "react";
+import {
+  ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 export default function LoginScreen() {
   const router = useRouter();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = async () => {
     if (!email.trim() || !password) {
-      toast.error('Error', 'Please enter both email and password.');
+      toast.error("Error", "Please enter both email and password.");
       return;
     }
 
@@ -28,9 +37,9 @@ export default function LoginScreen() {
 
     try {
       const response = await fetch(`${API_BASE_URL}/auth/login`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           email: email.trim(),
@@ -49,28 +58,28 @@ export default function LoginScreen() {
       } else {
         // Error response
         // { "detail": { "success": false, "message": "Invalid credentials", "data": null } }
-        const errorMsg = data.detail?.message || data.message || 'Login failed. Please check your credentials.';
-        toast.error('Error', errorMsg);
+        const errorMsg =
+          data.detail?.message || data.message || "Login failed. Please check your credentials.";
+        toast.error("Error", errorMsg);
       }
     } catch (error) {
-      console.error('Login Error:', error);
-      toast.error('Connection Error', 'Could not connect to the server. Please check your internet connection.');
+      console.error("Login Error:", error);
+      toast.error(
+        "Connection Error",
+        "Could not connect to the server. Please check your internet connection.",
+      );
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <LinearGradient
-      colors={[Colors.gradient.start, Colors.gradient.end]}
-      style={styles.container}
-    >
+    <LinearGradient colors={[Colors.gradient.start, Colors.gradient.end]} style={styles.container}>
       <KeyboardAvoidingView
         style={{ flex: 1 }}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
       >
         <ScrollView contentContainerStyle={styles.scrollContainer} bounces={false}>
-
           {/* Header */}
           <View style={styles.header}>
             <Text style={styles.titleText}>Soul AI</Text>
@@ -112,7 +121,7 @@ export default function LoginScreen() {
             />
 
             <View style={styles.forgotPasswordContainer}>
-              <TouchableOpacity activeOpacity={0.7} onPress={() => { }}>
+              <TouchableOpacity activeOpacity={0.7} onPress={() => {}}>
                 <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
               </TouchableOpacity>
             </View>
@@ -129,25 +138,24 @@ export default function LoginScreen() {
                 variant="social"
                 icon={<AntDesign name="apple" size={20} color="#000" />}
                 style={styles.socialBtnMargin}
-                onPress={() => { }}
+                onPress={() => {}}
               />
 
               <AppButton
                 title="Continue with Google"
                 variant="social"
                 icon={<AntDesign name="google" size={20} color="#DB4437" />}
-                onPress={() => { }}
+                onPress={() => {}}
               />
             </View>
           </View>
 
           {/* Bottom Link */}
           <View style={styles.bottomLinkContainer}>
-            <TouchableOpacity activeOpacity={0.7} onPress={() => router.push('/signup')}>
+            <TouchableOpacity activeOpacity={0.7} onPress={() => router.push("/signup")}>
               <Text style={styles.bottomLinkText}>Don't have an account? Create one</Text>
             </TouchableOpacity>
           </View>
-
         </ScrollView>
       </KeyboardAvoidingView>
     </LinearGradient>
@@ -160,30 +168,30 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     flexGrow: 1,
-    alignItems: 'center',
+    alignItems: "center",
     paddingHorizontal: 28,
     paddingTop: 80, // Approximate top padding based on design
     paddingBottom: 40,
   },
   header: {
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 100, // Increased gap to match the screenshot proportions
   },
   titleText: {
     fontFamily: Typography.fonts.regular,
     fontSize: Typography.sizes.title,
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     marginBottom: 8,
   },
   subtitleText: {
     fontFamily: Typography.fonts.medium,
     fontSize: Typography.sizes.subtitle,
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     opacity: 0.6,
   },
   formContainer: {
-    width: '100%',
-    alignItems: 'center',
+    width: "100%",
+    alignItems: "center",
   },
   inputMargin: {
     marginBottom: 12,
@@ -194,40 +202,39 @@ const styles = StyleSheet.create({
   dividerContainer: {
     marginTop: 32,
     marginBottom: 20,
-    alignItems: 'center',
+    alignItems: "center",
   },
   dividerText: {
     fontFamily: Typography.fonts.medium,
     fontSize: 12,
-    color: '#DBE7FB',
+    color: "#DBE7FB",
     opacity: 0.6,
   },
   socialContainer: {
-    width: '100%',
-    alignItems: 'center',
+    width: "100%",
+    alignItems: "center",
   },
   socialBtnMargin: {
     marginBottom: 16,
   },
   bottomLinkContainer: {
     marginTop: 32, // Same distance as 'Or Sign In With'
-    alignItems: 'center',
+    alignItems: "center",
   },
   bottomLinkText: {
     fontFamily: Typography.fonts.bold,
     fontSize: 14,
-    color: '#FFFFFF',
+    color: "#FFFFFF",
   },
   forgotPasswordContainer: {
-    width: '100%',
-    alignItems: 'flex-start',
+    width: "100%",
+    alignItems: "flex-start",
     marginTop: 8,
   },
 
   forgotPasswordText: {
     fontFamily: Typography.fonts.bold,
     fontSize: 13,
-    color: '#FFFFFF'
+    color: "#FFFFFF",
   },
-
 });

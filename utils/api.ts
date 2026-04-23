@@ -15,7 +15,7 @@ export const apiClient = {
     };
 
     if (token) {
-      headers['Authorization'] = `Bearer ${token}`;
+      headers["Authorization"] = `Bearer ${token}`;
     }
 
     const config: RequestInit = {
@@ -23,7 +23,7 @@ export const apiClient = {
       headers,
     };
 
-    if (options.body && typeof options.body !== 'string') {
+    if (options.body && typeof options.body !== "string") {
       config.body = JSON.stringify(options.body);
     }
 
@@ -38,24 +38,24 @@ export const apiClient = {
 
       return response;
     } catch (error) {
-      console.error('API Fetch Error:', error);
+      console.error("API Fetch Error:", error);
       throw error;
     }
   },
 
   async get(endpoint: string, options: RequestOptions = {}) {
-    return this.fetch(endpoint, { ...options, method: 'GET' });
+    return this.fetch(endpoint, { ...options, method: "GET" });
   },
 
   async post(endpoint: string, body: any, options: RequestOptions = {}) {
-    return this.fetch(endpoint, { ...options, method: 'POST', body });
+    return this.fetch(endpoint, { ...options, method: "POST", body });
   },
 
   async patch(endpoint: string, body: any, options: RequestOptions = {}) {
-    return this.fetch(endpoint, { ...options, method: 'PATCH', body });
+    return this.fetch(endpoint, { ...options, method: "PATCH", body });
   },
 
   async delete(endpoint: string, options: RequestOptions = {}) {
-    return this.fetch(endpoint, { ...options, method: 'DELETE' });
+    return this.fetch(endpoint, { ...options, method: "DELETE" });
   },
 };
