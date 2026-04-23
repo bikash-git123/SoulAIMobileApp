@@ -72,7 +72,10 @@ export default function AuthOptionsScreen() {
     return (
       <LinearGradient
         colors={[Colors.gradient.start, Colors.gradient.end]}
-        style={[styles.container, { justifyContent: "center", alignItems: "center" }]}
+        style={[
+          styles.container,
+          { justifyContent: "center", alignItems: "center" },
+        ]}
       >
         <ActivityIndicator size="large" color="#FFFFFF" />
       </LinearGradient>
@@ -80,8 +83,14 @@ export default function AuthOptionsScreen() {
   }
 
   return (
-    <LinearGradient colors={[Colors.gradient.start, Colors.gradient.end]} style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContainer} bounces={false}>
+    <LinearGradient
+      colors={[Colors.gradient.start, Colors.gradient.end]}
+      style={styles.container}
+    >
+      <ScrollView
+        contentContainerStyle={styles.scrollContainer}
+        bounces={false}
+      >
         {/* Header (same as first screen) */}
         <View style={styles.header}>
           <Text style={styles.titleText}>Welcome to Soul AI</Text>
@@ -127,9 +136,16 @@ export default function AuthOptionsScreen() {
         {/* Divider (same position as first screen) */}
         <View style={styles.dividerContainer}>
           <Text style={styles.termsText}>
-            By tapping Continue or logging into an existing Soul account, you agree to our{" "}
-            <Text style={styles.linkText}>Terms</Text> and acknowledge that you have read our{" "}
-            <Text style={styles.linkText}>Privacy Policy</Text>.
+            By tapping Continue or logging into an existing Soul account, you
+            agree to our <Text style={styles.linkText} onPress={() => router.push("/terms" as any)}>Terms</Text> and
+            acknowledge that you have read our{" "}
+            <Text
+              style={styles.linkText}
+              onPress={() => router.push("/privacy-policy")}
+            >
+              Privacy Policy
+            </Text>
+            .
           </Text>
         </View>
 
@@ -137,7 +153,8 @@ export default function AuthOptionsScreen() {
         <View style={styles.bottomLinkContainer}>
           <TouchableOpacity onPress={() => router.push("/signup")}>
             <Text style={styles.bottomLinkText}>
-              Don’t have an account? <Text style={styles.boldText}>Create one</Text>
+              Don’t have an account?{" "}
+              <Text style={styles.boldText}>Create one</Text>
             </Text>
           </TouchableOpacity>
         </View>

@@ -18,19 +18,9 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { normalize } from "@/utils/responsive";
 
-const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
-// Responsive Scaling Utility
-const scale = SCREEN_WIDTH / 375;
-const normalize = (size: number) => {
-  const newSize = size * scale;
-  if (Platform.OS === "ios") {
-    return Math.round(PixelRatio.roundToNearestPixel(newSize));
-  } else {
-    return Math.round(PixelRatio.roundToNearestPixel(newSize)) - 2;
-  }
-};
 
 const THERAPY_TYPES = [
   { id: "1", title: "Cognitive Therapy", color: Colors.therapy.orange },
@@ -58,6 +48,16 @@ export default function ChatStarterScreen() {
 
   const displayName = name || "Bikash";
 
+  const handleSend = () => {
+    if (inputText.trim()) {
+      router.push({
+        pathname: "/conversations",
+        params: { initialMessage: inputText.trim() },
+      } as any);
+      setInputText("");
+    }
+  };
+
   return (
     <LinearGradient
       colors={["#FFFFFF", "#E2F4FF"]}
@@ -68,8 +68,8 @@ export default function ChatStarterScreen() {
       <SafeAreaView style={styles.safeArea} edges={["top", "left", "right", "bottom"]}>
         <KeyboardAvoidingView
           style={styles.flex1}
-          behavior={Platform.OS === "ios" ? "padding" : undefined}
-          keyboardVerticalOffset={Platform.OS === "ios" ? 0 : normalize(20)}
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
         >
           {/* Main Content Area */}
           <View style={styles.flex1}>
@@ -93,6 +93,7 @@ export default function ChatStarterScreen() {
               contentContainerStyle={styles.scrollContent}
               showsVerticalScrollIndicator={false}
               bounces={true}
+              keyboardShouldPersistTaps="handled"
             >
               {/* Greeting Header */}
               <View style={styles.header}>
@@ -142,8 +143,12 @@ export default function ChatStarterScreen() {
                 <TouchableOpacity style={styles.iconButton}>
                   <Feather name="mic" size={normalize(24)} color="#333" />
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.iconButton}>
-                  <Ionicons name="paper-plane-outline" size={normalize(24)} color="#333" />
+                <TouchableOpacity style={styles.iconButton} onPress={handleSend}>
+                  <Ionicons
+                    name="paper-plane-outline"
+                    size={normalize(24)}
+                    color="#333"
+                  />
                 </TouchableOpacity>
               </View>
             </View>
