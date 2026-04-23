@@ -1,5 +1,5 @@
-import React, { useRef, useState } from 'react';
-import { View, TextInput, StyleSheet } from 'react-native';
+import React, { useRef, useState } from "react";
+import { View, TextInput, StyleSheet } from "react-native";
 
 export interface OtpInputProps {
   length?: number;
@@ -14,7 +14,7 @@ export const OtpInput = ({ length = 4, onChange }: OtpInputProps) => {
     const newOtp = [...otp];
     newOtp[index] = text;
     setOtp(newOtp);
-    onChange?.(newOtp.join(''));
+    onChange?.(newOtp.join(""));
 
     // Auto-focus next input
     if (text.length === 1 && index < length - 1) {
@@ -24,7 +24,7 @@ export const OtpInput = ({ length = 4, onChange }: OtpInputProps) => {
 
   const handleKeyPress = (e: any, index: number) => {
     // Auto-focus previous input on backspace
-    if (e.nativeEvent.key === 'Backspace' && !otp[index] && index > 0) {
+    if (e.nativeEvent.key === "Backspace" && !otp[index] && index > 0) {
       inputRefs.current[index - 1]?.focus();
     }
   };
@@ -56,25 +56,25 @@ export const OtpInput = ({ length = 4, onChange }: OtpInputProps) => {
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
   },
   box: {
     width: 64,
     height: 64,
-    backgroundColor: 'rgba(255, 255, 255, 0.9)', // slightly whiter than normal input
+    backgroundColor: "rgba(255, 255, 255, 0.9)", // slightly whiter than normal input
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.65)',
+    borderColor: "rgba(255, 255, 255, 0.65)",
     borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   input: {
     fontSize: 24,
-    textAlign: 'center',
-    color: '#333333',
-    width: '100%',
-    height: '100%',
+    textAlign: "center",
+    color: "#333333",
+    width: "100%",
+    height: "100%",
   },
 });

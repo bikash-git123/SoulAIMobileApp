@@ -1,46 +1,55 @@
-import { AppButton } from '@/components/ui/AppButton';
-import { AppInput } from '@/components/ui/AppInput';
-import { Colors } from '@/constants/theme';
-import { API_BASE_URL } from '@/constants/Config';
-import { Typography } from '@/constants/Typography';
-import { AntDesign, Feather } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
-import { useRouter } from 'expo-router';
-import { useState } from 'react';
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View, ActivityIndicator } from 'react-native';
-import { toast } from '@/utils/toast';
+import { AppButton } from "@/components/ui/AppButton";
+import { AppInput } from "@/components/ui/AppInput";
+import { Colors } from "@/constants/theme";
+import { API_BASE_URL } from "@/constants/Config";
+import { Typography } from "@/constants/Typography";
+import { AntDesign, Feather } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
+import { useRouter } from "expo-router";
+import { useState } from "react";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  ActivityIndicator,
+} from "react-native";
+import { toast } from "@/utils/toast";
 
 // Remove constant VALID_EMAIL as we are using a real API now
 
 export default function SignupScreen() {
   const router = useRouter();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSendOtp = async () => {
     if (!email.trim()) {
-      toast.error('Error', 'Please enter your email address.');
+      toast.error("Error", "Please enter your email address.");
       return;
     }
-    
+
     // Simple email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email.trim())) {
-      toast.error('Error', 'Please enter a valid email address.');
+      toast.error("Error", "Please enter a valid email address.");
       return;
     }
 
     if (!password) {
-      toast.error('Error', 'Please enter a password.');
+      toast.error("Error", "Please enter a password.");
       return;
     }
 
     if (password !== confirmPassword) {
-      toast.error('Error', 'Passwords do not match.');
+      toast.error("Error", "Passwords do not match.");
       return;
     }
 
@@ -48,9 +57,9 @@ export default function SignupScreen() {
 
     try {
       const response = await fetch(`${API_BASE_URL}/auth/register`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           email: email.trim(),
@@ -63,38 +72,37 @@ export default function SignupScreen() {
       if (response.ok) {
         // Success response
         // { "success": true, "message": "...", "data": { ... } }
-        toast.success('Success', data.message || 'OTP sent to your email.');
+        toast.success("Success", data.message || "OTP sent to your email.");
         router.push({
-          pathname: '/emailverify',
-          params: { email: email.trim() }
+          pathname: "/emailverify",
+          params: { email: email.trim() },
         });
       } else if (response.status === 422) {
         // Validation error
-        const errorMsg = data.detail?.[0]?.msg || 'Validation error';
-        toast.error('Error', errorMsg);
+        const errorMsg = data.detail?.[0]?.msg || "Validation error";
+        toast.error("Error", errorMsg);
       } else {
         // Other errors
-        toast.error('Error', data.message || 'Registration failed. Please try again.');
+        toast.error("Error", data.message || "Registration failed. Please try again.");
       }
     } catch (error) {
-      console.error('Registration Error:', error);
-      toast.error('Connection Error', 'Could not connect to the server. If you are using a physical device, please use your machine\'s IP address instead of localhost.');
+      console.error("Registration Error:", error);
+      toast.error(
+        "Connection Error",
+        "Could not connect to the server. If you are using a physical device, please use your machine's IP address instead of localhost.",
+      );
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <LinearGradient
-      colors={[Colors.gradient.start, Colors.gradient.end]}
-      style={styles.container}
-    >
+    <LinearGradient colors={[Colors.gradient.start, Colors.gradient.end]} style={styles.container}>
       <KeyboardAvoidingView
         style={{ flex: 1 }}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
       >
         <ScrollView contentContainerStyle={styles.scrollContainer} bounces={false}>
-
           {/* Header */}
           <View style={styles.header}>
             <Text style={styles.titleText}>Get Started</Text>
@@ -136,7 +144,11 @@ export default function SignupScreen() {
               style={styles.inputMargin}
               rightIcon={
                 <TouchableOpacity onPress={() => setShowConfirmPassword(!showConfirmPassword)}>
-                  <Feather name={showConfirmPassword ? "eye" : "eye-off"} size={20} color="#555555" />
+                  <Feather
+                    name={showConfirmPassword ? "eye" : "eye-off"}
+                    size={20}
+                    color="#555555"
+                  />
                 </TouchableOpacity>
               }
             />
@@ -172,11 +184,10 @@ export default function SignupScreen() {
 
           {/* Bottom Link */}
           <View style={styles.bottomLinkContainer}>
-            <TouchableOpacity activeOpacity={0.7} onPress={() => router.push('/login')}>
+            <TouchableOpacity activeOpacity={0.7} onPress={() => router.push("/login")}>
               <Text style={styles.bottomLinkText}>Already have an account? Sign in</Text>
             </TouchableOpacity>
           </View>
-
         </ScrollView>
       </KeyboardAvoidingView>
     </LinearGradient>
@@ -189,30 +200,30 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     flexGrow: 1,
-    alignItems: 'center',
+    alignItems: "center",
     paddingHorizontal: 28,
     paddingTop: 80,
     paddingBottom: 40,
   },
   header: {
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 60,
   },
   titleText: {
     fontFamily: Typography.fonts.regular,
     fontSize: Typography.sizes.title,
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     marginBottom: 8,
   },
   subtitleText: {
     fontFamily: Typography.fonts.medium,
     fontSize: Typography.sizes.subtitle,
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     opacity: 0.6,
   },
   formContainer: {
-    width: '100%',
-    alignItems: 'center',
+    width: "100%",
+    alignItems: "center",
   },
   inputMargin: {
     marginBottom: 12,
@@ -223,28 +234,28 @@ const styles = StyleSheet.create({
   dividerContainer: {
     marginTop: 32,
     marginBottom: 20,
-    alignItems: 'center',
+    alignItems: "center",
   },
   dividerText: {
     fontFamily: Typography.fonts.medium,
     fontSize: 12,
-    color: '#DBE7FB',
+    color: "#DBE7FB",
     opacity: 0.6,
   },
   socialContainer: {
-    width: '100%',
-    alignItems: 'center',
+    width: "100%",
+    alignItems: "center",
   },
   socialBtnMargin: {
     marginBottom: 16,
   },
   bottomLinkContainer: {
     marginTop: 32,
-    alignItems: 'center',
+    alignItems: "center",
   },
   bottomLinkText: {
     fontFamily: Typography.fonts.regular,
     fontSize: 14,
-    color: '#FFFFFF',
-  }
+    color: "#FFFFFF",
+  },
 });

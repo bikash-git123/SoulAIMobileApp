@@ -10,11 +10,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 
 const LANGUAGES = [
-  'English',
-  'Hindi',
-  'Marathi',
-  'Gujarati',
-  'Odia',
+  "English",
+  "Hindi",
+  "Marathi",
+  "Gujarati",
+  "Odia",
   // 'Tamil',
   // 'Telugu',
   // 'Kannada',
@@ -33,10 +33,7 @@ export default function LanguageScreen() {
       return true;
     };
 
-    const backHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
-      backAction,
-    );
+    const backHandler = BackHandler.addEventListener("hardwareBackPress", backAction);
 
     return () => backHandler.remove();
   }, []);
@@ -44,13 +41,12 @@ export default function LanguageScreen() {
   return (
     <LinearGradient
       // Approximating the radial gradient from the CSS
-      colors={['#FFFFFF', '#E2F4FF']}
+      colors={["#FFFFFF", "#E2F4FF"]}
       start={{ x: 0.1, y: 0.1 }}
       end={{ x: 1, y: 1 }}
       style={styles.container}
     >
       <SafeAreaView style={styles.safeArea}>
-
         {/* Top Navigation & Progress */}
         <View style={styles.topNavContainer}>
           <TouchableOpacity onPress={() => BackHandler.exitApp()} style={styles.backButton}>
@@ -64,7 +60,7 @@ export default function LanguageScreen() {
         <ScrollView contentContainerStyle={styles.scrollContainer} bounces={false}>
           {/* Header */}
           <View style={styles.header}>
-            <Text style={styles.titleText}>Choose your{'\n'}preferred language</Text>
+            <Text style={styles.titleText}>Choose your{"\n"}preferred language</Text>
             <Text style={styles.subtitleText}>Customize the app experience</Text>
           </View>
 
@@ -77,15 +73,14 @@ export default function LanguageScreen() {
                   key={lang}
                   activeOpacity={0.7}
                   onPress={() => setSelectedLanguage(lang)}
-                  style={[
-                    styles.languageOption,
-                    isSelected && styles.languageOptionSelected
-                  ]}
+                  style={[styles.languageOption, isSelected && styles.languageOptionSelected]}
                 >
-                  <Text style={[
-                    styles.languageText,
-                    isSelected ? { color: '#8A8A8E' } : { color: '#8A8A8E' } // In mockup all options look gray, selected has blue border
-                  ]}>
+                  <Text
+                    style={[
+                      styles.languageText,
+                      isSelected ? { color: "#8A8A8E" } : { color: "#8A8A8E" }, // In mockup all options look gray, selected has blue border
+                    ]}
+                  >
                     {lang}
                   </Text>
                 </TouchableOpacity>
@@ -99,12 +94,12 @@ export default function LanguageScreen() {
             style={styles.nextButton}
             onPress={() => {
               if (!selectedLanguage) {
-                toast.error('Error', 'Please select your preferred language');
+                toast.error("Error", "Please select your preferred language");
                 return;
               }
               router.push({
-                pathname: '/fullname',
-                params: { language: selectedLanguage }
+                pathname: "/fullname",
+                params: { language: selectedLanguage },
               });
             }}
           />
@@ -120,11 +115,11 @@ const styles = StyleSheet.create({
   },
   safeArea: {
     flex: 1,
-    paddingTop: Platform.OS === 'android' ? 40 : 0,
+    paddingTop: Platform.OS === "android" ? 40 : 0,
   },
   topNavContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: 24,
     paddingTop: 16,
     paddingBottom: 24,
@@ -136,14 +131,14 @@ const styles = StyleSheet.create({
   progressTrack: {
     flex: 1,
     height: 4,
-    backgroundColor: 'rgba(60, 97, 221, 0.1)', // Light blue track
+    backgroundColor: "rgba(60, 97, 221, 0.1)", // Light blue track
     borderRadius: 2,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   progressFill: {
-    width: '13%', // Adjusted for consistent flow
-    height: '100%',
-    backgroundColor: '#3C61DD', // Primary blue
+    width: "13%", // Adjusted for consistent flow
+    height: "100%",
+    backgroundColor: "#3C61DD", // Primary blue
   },
   scrollContainer: {
     flexGrow: 1,
@@ -151,39 +146,39 @@ const styles = StyleSheet.create({
     paddingBottom: 40,
   },
   header: {
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 40,
   },
   titleText: {
     fontFamily: Typography.fonts.regular,
     fontSize: 32, // Large title
-    color: '#111111',
-    textAlign: 'center',
+    color: "#111111",
+    textAlign: "center",
     marginBottom: 12,
   },
   subtitleText: {
     fontFamily: Typography.fonts.regular,
     fontSize: Typography.sizes.subtitle,
-    color: '#8A8A8E',
-    textAlign: 'center',
+    color: "#8A8A8E",
+    textAlign: "center",
   },
   optionsContainer: {
-    width: '100%',
+    width: "100%",
     marginBottom: 15,
   },
   languageOption: {
-    width: '100%',
+    width: "100%",
     height: 60, // slightly taller than standard input based on visual weight
-    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.65)',
+    borderColor: "rgba(255, 255, 255, 0.65)",
     borderRadius: 8,
-    justifyContent: 'center',
+    justifyContent: "center",
     paddingHorizontal: 16,
     marginBottom: 12,
   },
   languageOptionSelected: {
-    borderColor: '#3C61DD', // Blue border for selected state
+    borderColor: "#3C61DD", // Blue border for selected state
     borderWidth: 1.5,
   },
   languageText: {
@@ -192,5 +187,5 @@ const styles = StyleSheet.create({
   },
   nextButton: {
     // marginTop: 10,
-  }
+  },
 });

@@ -10,12 +10,12 @@ import { ActivityIndicator, KeyboardAvoidingView, Platform, ScrollView, StyleShe
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const SUPPORT_OPTIONS = [
-  'Stress',
-  'Relationship',
-  'Anxiety',
-  'Work / School',
-  'Loneliness',
-  'Other'
+  "Stress",
+  "Relationship",
+  "Anxiety",
+  "Work / School",
+  "Loneliness",
+  "Other",
 ];
 
 export default function SupportScreen() {
@@ -25,7 +25,7 @@ export default function SupportScreen() {
 
   const toggleSupport = (option: string) => {
     if (selectedSupport.includes(option)) {
-      setSelectedSupport(selectedSupport.filter(s => s !== option));
+      setSelectedSupport(selectedSupport.filter((s) => s !== option));
     } else {
       setSelectedSupport([...selectedSupport, option]);
     }
@@ -33,34 +33,33 @@ export default function SupportScreen() {
 
   const handleNext = async () => {
     if (selectedSupport.length === 0) {
-      toast.error('Error', 'Please select at least one area where you need support');
+      toast.error("Error", "Please select at least one area where you need support");
       return;
     }
 
-
     setIsLoading(true);
     try {
-      const response = await apiClient.patch('/users/me', {
-        support_types: selectedSupport
+      const response = await apiClient.patch("/users/me", {
+        support_types: selectedSupport,
       });
 
       if (response.status === 401) {
-        toast.error('Session Expired', 'Please login again.');
-        router.replace('/');
+        toast.error("Session Expired", "Please login again.");
+        router.replace("/");
         return;
       }
 
       const data = await response.json();
 
       if (response.ok) {
-        router.replace('/chatstarter');
+        router.replace("/chatstarter");
       } else {
-        const errorMsg = data.detail?.message || data.message || 'Failed to update support types.';
-        toast.error('Update Failed', errorMsg);
+        const errorMsg = data.detail?.message || data.message || "Failed to update support types.";
+        toast.error("Update Failed", errorMsg);
       }
     } catch (error) {
-      console.error('Update Support Error:', error);
-      toast.error('Connection Error', 'Could not connect to the server.');
+      console.error("Update Support Error:", error);
+      toast.error("Connection Error", "Could not connect to the server.");
     } finally {
       setIsLoading(false);
     }
@@ -68,16 +67,15 @@ export default function SupportScreen() {
 
   return (
     <LinearGradient
-      colors={['#FFFFFF', '#E2F4FF']}
+      colors={["#FFFFFF", "#E2F4FF"]}
       start={{ x: 0.1, y: 0.1 }}
       end={{ x: 1, y: 1 }}
       style={styles.container}
     >
       <SafeAreaView style={styles.safeArea}>
-
         <KeyboardAvoidingView
           style={{ flex: 1 }}
-          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          behavior={Platform.OS === "ios" ? "padding" : undefined}
         >
           {/* Top Navigation & Progress */}
           <View style={styles.topNavContainer}>
@@ -92,7 +90,7 @@ export default function SupportScreen() {
           <ScrollView contentContainerStyle={styles.scrollContainer} bounces={false}>
             {/* Header */}
             <View style={styles.header}>
-              <Text style={styles.titleText}>Where do you need {'\n'}support?</Text>
+              <Text style={styles.titleText}>Where do you need {"\n"}support?</Text>
               <Text style={styles.subtitleText}>Same challenges you’re facing now</Text>
             </View>
 
@@ -105,19 +103,10 @@ export default function SupportScreen() {
                     key={option}
                     activeOpacity={0.7}
                     onPress={() => toggleSupport(option)}
-                    style={[
-                      styles.supportOption,
-                      isSelected && styles.supportOptionSelected
-                    ]}
+                    style={[styles.supportOption, isSelected && styles.supportOptionSelected]}
                   >
-                    <Text style={[
-                      styles.supportText,
-                      { color: '#8A8A8E' }
-                    ]}>
-                      {option}
-                    </Text>
+                    <Text style={[styles.supportText, { color: "#8A8A8E" }]}>{option}</Text>
                   </TouchableOpacity>
-
                 );
               })}
             </View>
@@ -142,11 +131,11 @@ const styles = StyleSheet.create({
   },
   safeArea: {
     flex: 1,
-    paddingTop: Platform.OS === 'android' ? 40 : 0,
+    paddingTop: Platform.OS === "android" ? 40 : 0,
   },
   topNavContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: 24,
     paddingTop: 16,
     paddingBottom: 24,
@@ -158,14 +147,14 @@ const styles = StyleSheet.create({
   progressTrack: {
     flex: 1,
     height: 4,
-    backgroundColor: 'rgba(60, 97, 221, 0.1)', // Light blue track
+    backgroundColor: "rgba(60, 97, 221, 0.1)", // Light blue track
     borderRadius: 2,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   progressFill: {
-    width: '91%', // Adjusted for consistent flow (78% + 13%)
-    height: '100%',
-    backgroundColor: '#3C61DD', // Primary blue
+    width: "91%", // Adjusted for consistent flow (78% + 13%)
+    height: "100%",
+    backgroundColor: "#3C61DD", // Primary blue
   },
   scrollContainer: {
     flexGrow: 1,
@@ -173,39 +162,39 @@ const styles = StyleSheet.create({
     paddingBottom: 40,
   },
   header: {
-    alignItems: 'center',
-    marginBottom: 40
+    alignItems: "center",
+    marginBottom: 40,
   },
   titleText: {
     fontFamily: Typography.fonts.regular,
     fontSize: 30, // Large title
-    color: '#111111',
-    textAlign: 'center',
-    marginBottom: 12
+    color: "#111111",
+    textAlign: "center",
+    marginBottom: 12,
   },
   subtitleText: {
     fontFamily: Typography.fonts.regular,
     fontSize: Typography.sizes.subtitle,
-    color: '#8A8A8E',
-    textAlign: 'center',
+    color: "#8A8A8E",
+    textAlign: "center",
   },
   optionsContainer: {
-    width: '100%',
+    width: "100%",
     marginBottom: 15,
   },
   supportOption: {
-    width: '100%',
+    width: "100%",
     height: 60, // slightly taller than standard input based on visual weight
-    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.65)',
+    borderColor: "rgba(255, 255, 255, 0.65)",
     borderRadius: 8,
-    justifyContent: 'center',
+    justifyContent: "center",
     paddingHorizontal: 16,
     marginBottom: 12,
   },
   supportOptionSelected: {
-    borderColor: '#3C61DD', // Blue border for selected state
+    borderColor: "#3C61DD", // Blue border for selected state
     borderWidth: 1.5,
   },
   supportText: {
@@ -215,5 +204,5 @@ const styles = StyleSheet.create({
 
   nextButton: {
     // marginTop: 10,
-  }
+  },
 });

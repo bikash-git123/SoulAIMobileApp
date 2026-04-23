@@ -1,12 +1,12 @@
-import Toast from 'react-native-toast-message';
+import Toast from "react-native-toast-message";
 
 export const toast = {
   success: (title: string, message?: string) => {
     Toast.show({
-      type: 'success',
+      type: "success",
       text1: title,
       text2: message,
-      position: 'bottom',
+      position: "bottom",
       visibilityTime: 2000,
       autoHide: true,
       bottomOffset: 40,
@@ -14,10 +14,10 @@ export const toast = {
   },
   error: (title: string, message?: string) => {
     Toast.show({
-      type: 'error',
+      type: "error",
       text1: title,
       text2: message,
-      position: 'bottom',
+      position: "bottom",
       visibilityTime: 2000,
       autoHide: true,
       bottomOffset: 40,
@@ -25,13 +25,13 @@ export const toast = {
   },
   info: (title: string, message?: string) => {
     Toast.show({
-      type: 'info',
+      type: "info",
       text1: title,
       text2: message,
-      position: 'bottom',
+      position: "bottom",
       visibilityTime: 2000,
       autoHide: true,
       bottomOffset: 40,
     });
-  }
+  },
 };
