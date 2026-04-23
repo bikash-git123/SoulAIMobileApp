@@ -4,13 +4,7 @@ import { Feather, Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import React from "react";
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function PrivacyPolicyScreen() {
@@ -22,17 +16,11 @@ export default function PrivacyPolicyScreen() {
 
   return (
     <View style={styles.container}>
-      <LinearGradient
-        colors={[Colors.gradient.start, Colors.gradient.end]}
-        style={styles.gradient}
-      >
+      <LinearGradient colors={[Colors.gradient.start, Colors.gradient.end]} style={styles.gradient}>
         <SafeAreaView style={styles.safeArea}>
           {/* Header */}
           <View style={styles.header}>
-            <TouchableOpacity
-              onPress={() => router.back()}
-              style={styles.iconButton}
-            >
+            <TouchableOpacity onPress={() => router.back()} style={styles.iconButton}>
               <Feather name="arrow-left" size={24} color="#FFF" />
             </TouchableOpacity>
             <Text style={styles.headerTitle}>Privacy Policy</Text>
@@ -49,19 +37,18 @@ export default function PrivacyPolicyScreen() {
               bounces={true}
             >
               <Text style={styles.introText}>
-                At Soul AI, we are committed to protecting your privacy and
-                ensuring that your conversational space remains secure,
-                confidential, and calming. This Privacy Policy explains how we
-                collect, use, and safeguard your information when you use the
-                Soul AI mobile application.
+                At Soul AI, we are committed to protecting your privacy and ensuring that your
+                conversational space remains secure, confidential, and calming. This Privacy Policy
+                explains how we collect, use, and safeguard your information when you use the Soul
+                AI mobile application.
               </Text>
 
               {/* Section 1 */}
               <View style={styles.section}>
                 <Text style={styles.sectionTitle}>1. Information We Collect</Text>
                 <Text style={styles.sectionIntro}>
-                  To provide a personalized and supportive experience, we collect
-                  the following types of information:
+                  To provide a personalized and supportive experience, we collect the following
+                  types of information:
                 </Text>
                 <View style={styles.bulletList}>
                   <BulletItem
@@ -85,12 +72,9 @@ export default function PrivacyPolicyScreen() {
 
               {/* Section 2 */}
               <View style={styles.section}>
-                <Text style={styles.sectionTitle}>
-                  2. How We Use Your Information
-                </Text>
+                <Text style={styles.sectionTitle}>2. How We Use Your Information</Text>
                 <Text style={styles.sectionIntro}>
-                  We use the collected data strictly to operate and improve the
-                  Soul AI experience:
+                  We use the collected data strictly to operate and improve the Soul AI experience:
                 </Text>
                 <View style={styles.bulletList}>
                   <BulletItem text="To power the AI conversational engine and provide empathetic, context-aware responses." />
@@ -102,12 +86,10 @@ export default function PrivacyPolicyScreen() {
 
               {/* Section 3 */}
               <View style={styles.section}>
-                <Text style={styles.sectionTitle}>
-                  3. Data Privacy & AI Processing
-                </Text>
+                <Text style={styles.sectionTitle}>3. Data Privacy & AI Processing</Text>
                 <Text style={styles.sectionIntro}>
-                  Given the sensitive nature of an AI therapist application, we
-                  employ strict data handling protocols:
+                  Given the sensitive nature of an AI therapist application, we employ strict data
+                  handling protocols:
                 </Text>
                 <View style={styles.bulletList}>
                   <BulletItem
@@ -125,11 +107,10 @@ export default function PrivacyPolicyScreen() {
               <View style={styles.section}>
                 <Text style={styles.sectionTitle}>4. Data Security</Text>
                 <Text style={styles.sectionIntro}>
-                  We implement industry-standard encryption protocols (such as
-                  AES-256 and TLS) to protect your data both in transit and at
-                  rest. While no digital platform is completely invulnerable, we
-                  continuously update our security practices to protect your
-                  personal reflections and interactions from unauthorized access.
+                  We implement industry-standard encryption protocols (such as AES-256 and TLS) to
+                  protect your data both in transit and at rest. While no digital platform is
+                  completely invulnerable, we continuously update our security practices to protect
+                  your personal reflections and interactions from unauthorized access.
                 </Text>
               </View>
 
@@ -137,9 +118,8 @@ export default function PrivacyPolicyScreen() {
               <View style={styles.section}>
                 <Text style={styles.sectionTitle}>5. Sharing Your Information</Text>
                 <Text style={styles.sectionIntro}>
-                  We do not sell your personal data or chat logs to third-party
-                  advertisers. We may only share your information in the following
-                  limited circumstances:
+                  We do not sell your personal data or chat logs to third-party advertisers. We may
+                  only share your information in the following limited circumstances:
                 </Text>
                 <View style={styles.bulletList}>
                   <BulletItem
@@ -155,12 +135,10 @@ export default function PrivacyPolicyScreen() {
 
               {/* Section 6 */}
               <View style={styles.section}>
-                <Text style={styles.sectionTitle}>
-                  6. Your Rights and Controls
-                </Text>
+                <Text style={styles.sectionTitle}>6. Your Rights and Controls</Text>
                 <Text style={styles.sectionIntro}>
-                  You retain full control over your data within Soul AI. Through
-                  the app's settings menu, you can:
+                  You retain full control over your data within Soul AI. Through the app's settings
+                  menu, you can:
                 </Text>
                 <View style={styles.bulletList}>
                   <BulletItem text="Review and export your chat history." />
@@ -173,10 +151,9 @@ export default function PrivacyPolicyScreen() {
               <View style={styles.section}>
                 <Text style={styles.sectionTitle}>7. Changes to This Policy</Text>
                 <Text style={styles.sectionIntro}>
-                  We may update this Privacy Policy periodically to reflect
-                  changes in our practices or app features. We will notify you of
-                  any significant changes via an in-app prompt or email before
-                  they take effect.
+                  We may update this Privacy Policy periodically to reflect changes in our practices
+                  or app features. We will notify you of any significant changes via an in-app
+                  prompt or email before they take effect.
                 </Text>
               </View>
 
@@ -184,25 +161,20 @@ export default function PrivacyPolicyScreen() {
               <View style={styles.section}>
                 <Text style={styles.sectionTitle}>8. Contact Us</Text>
                 <Text style={styles.sectionIntro}>
-                  If you have any questions, concerns, or feedback regarding this
-                  Privacy Policy or how we handle your data, please reach out to
-                  us at:
+                  If you have any questions, concerns, or feedback regarding this Privacy Policy or
+                  how we handle your data, please reach out to us at:
                 </Text>
-                <Text style={styles.contactText}>
-                  Email: [Insert Support Email Address]
-                </Text>
+                <Text style={styles.contactText}>Email: [Insert Support Email Address]</Text>
                 <Text style={styles.contactText}>
                   Mailing Address: [Insert Company Address, if applicable]
                 </Text>
               </View>
 
               <Text style={styles.disclaimerText}>
-                Disclaimer: This is a foundational privacy policy template
-                designed for UI/UX placement and general structural guidance. It
-                is highly recommended to have this document reviewed by legal
-                counsel to ensure full compliance with regional data protection
-                laws (such as GDPR, CCPA, or DPDP Act) before launching the
-                application.
+                Disclaimer: This is a foundational privacy policy template designed for UI/UX
+                placement and general structural guidance. It is highly recommended to have this
+                document reviewed by legal counsel to ensure full compliance with regional data
+                protection laws (such as GDPR, CCPA, or DPDP Act) before launching the application.
               </Text>
 
               {/* Bottom Padding */}

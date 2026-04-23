@@ -1,13 +1,20 @@
-import { AppButton } from '@/components/ui/AppButton';
-import { Typography } from '@/constants/Typography';
-import { Feather } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
-import { useRouter } from 'expo-router';
-import { useState } from 'react';
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { toast } from '@/utils/toast';
-
+import { AppButton } from "@/components/ui/AppButton";
+import { Typography } from "@/constants/Typography";
+import { Feather } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
+import { useRouter } from "expo-router";
+import { useState } from "react";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { toast } from "@/utils/toast";
 
 const TONE_OPTIONS = [
   "Warm and Nurturing",

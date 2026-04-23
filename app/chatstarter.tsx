@@ -1,14 +1,13 @@
 import { Colors } from "@/constants/theme";
 import { Typography } from "@/constants/Typography";
+import { normalize } from "@/utils/responsive";
 import { Feather, Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import {
-  Dimensions,
   Image,
   KeyboardAvoidingView,
-  PixelRatio,
   Platform,
   ScrollView,
   StyleSheet,
@@ -18,9 +17,6 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { normalize } from "@/utils/responsive";
-
-
 
 const THERAPY_TYPES = [
   { id: "1", title: "Cognitive Therapy", color: Colors.therapy.orange },
@@ -144,11 +140,7 @@ export default function ChatStarterScreen() {
                   <Feather name="mic" size={normalize(24)} color="#333" />
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.iconButton} onPress={handleSend}>
-                  <Ionicons
-                    name="paper-plane-outline"
-                    size={normalize(24)}
-                    color="#333"
-                  />
+                  <Ionicons name="paper-plane-outline" size={normalize(24)} color="#333" />
                 </TouchableOpacity>
               </View>
             </View>

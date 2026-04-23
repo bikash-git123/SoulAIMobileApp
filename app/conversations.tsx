@@ -1,22 +1,10 @@
-import { Colors } from "@/constants/theme";
 import { Typography } from "@/constants/Typography";
-import { Feather, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
-import { LinearGradient } from "expo-linear-gradient";
+import { normalize } from "@/utils/responsive";
+import { Feather } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React from "react";
-import {
-  Dimensions,
-  Image,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { normalize } from "@/utils/responsive";
-
-
 
 export default function ConversationsScreen() {
   const router = useRouter();
@@ -67,10 +55,7 @@ export default function ConversationsScreen() {
           <Text style={styles.headerTitle}>Conversations</Text>
           <TouchableOpacity onPress={() => {}}>
             <View style={styles.avatarContainer}>
-              <Image
-                source={require("@/assets/images/avatar.png")}
-                style={styles.avatar}
-              />
+              <Image source={require("@/assets/images/avatar.png")} style={styles.avatar} />
             </View>
           </TouchableOpacity>
         </View>
@@ -119,10 +104,7 @@ export default function ConversationsScreen() {
         </ScrollView>
 
         {/* FAB: New Chat */}
-        <TouchableOpacity
-          style={styles.fab}
-          onPress={() => router.push("/chatstarter")}
-        >
+        <TouchableOpacity style={styles.fab} onPress={() => router.push("/chatstarter")}>
           <Feather name="plus" size={normalize(24)} color="#FFF" />
           <Text style={styles.fabText}>New chat</Text>
         </TouchableOpacity>

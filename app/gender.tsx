@@ -1,14 +1,23 @@
-import { AppButton } from '@/components/ui/AppButton';
-import { AppInput } from '@/components/ui/AppInput';
-import { Typography } from '@/constants/Typography';
-import { apiClient } from '@/utils/api';
-import { toast } from '@/utils/toast';
-import { Feather } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
-import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useMemo, useState } from 'react';
-import { ActivityIndicator, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { AppButton } from "@/components/ui/AppButton";
+import { AppInput } from "@/components/ui/AppInput";
+import { Typography } from "@/constants/Typography";
+import { apiClient } from "@/utils/api";
+import { toast } from "@/utils/toast";
+import { Feather } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { useMemo, useState } from "react";
+import {
+  ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const COUNTRIES = ["India", "USA", "United Kingdom", "Canada", "Australia", "Germany", "France"];
 const GENDERS = ["Male", "Female", "Other"];
