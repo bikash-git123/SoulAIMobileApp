@@ -3,7 +3,7 @@ import { Colors } from '@/constants/theme';
 import { Typography } from '@/constants/Typography';
 import { apiClient } from '@/utils/api';
 import { AntDesign, Feather } from '@expo/vector-icons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { storage } from '@/utils/storage';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
@@ -16,7 +16,7 @@ export default function AuthOptionsScreen() {
   useEffect(() => {
     const checkToken = async () => {
       try {
-        const token = await AsyncStorage.getItem('userToken');
+        const token = await storage.getToken();
         if (token) {
           try {
             const response = await apiClient.get('/users/me');
