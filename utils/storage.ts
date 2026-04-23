@@ -1,7 +1,7 @@
-import * as SecureStore from 'expo-secure-store';
+import * as SecureStore from "expo-secure-store";
 
 export const STORAGE_KEYS = {
-  USER_TOKEN: 'userToken',
+  USER_TOKEN: "userToken",
 };
 
 export const storage = {
@@ -9,7 +9,7 @@ export const storage = {
     try {
       await SecureStore.setItemAsync(key, value);
     } catch (error) {
-      console.error('Storage setItem error:', error);
+      console.error("Storage setItem error:", error);
     }
   },
 
@@ -17,7 +17,7 @@ export const storage = {
     try {
       return await SecureStore.getItemAsync(key);
     } catch (error) {
-      console.error('Storage getItem error:', error);
+      console.error("Storage getItem error:", error);
       return null;
     }
   },
@@ -26,7 +26,7 @@ export const storage = {
     try {
       await SecureStore.deleteItemAsync(key);
     } catch (error) {
-      console.error('Storage removeItem error:', error);
+      console.error("Storage removeItem error:", error);
     }
   },
 

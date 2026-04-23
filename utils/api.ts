@@ -1,5 +1,5 @@
-import { storage } from '@/utils/storage';
-import { API_BASE_URL } from '@/constants/Config';
+import { storage } from "@/utils/storage";
+import { API_BASE_URL } from "@/constants/Config";
 
 interface RequestOptions extends RequestInit {
   body?: any;
@@ -8,9 +8,9 @@ interface RequestOptions extends RequestInit {
 export const apiClient = {
   async fetch(endpoint: string, options: RequestOptions = {}) {
     const token = await storage.getToken();
-    
+
     const headers: Record<string, string> = {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
       ...(options.headers as Record<string, string>),
     };
 

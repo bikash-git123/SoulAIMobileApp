@@ -1,13 +1,22 @@
-import { AppButton } from '@/components/ui/AppButton';
-import { Typography } from '@/constants/Typography';
-import { Feather } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
-import { useRouter } from 'expo-router';
-import { apiClient } from '@/utils/api';
-import { toast } from '@/utils/toast';
-import { useState } from 'react';
-import { ActivityIndicator, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { AppButton } from "@/components/ui/AppButton";
+import { Typography } from "@/constants/Typography";
+import { Feather } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
+import { useRouter } from "expo-router";
+import { apiClient } from "@/utils/api";
+import { toast } from "@/utils/toast";
+import { useState } from "react";
+import {
+  ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const SUPPORT_OPTIONS = [
   "Stress",

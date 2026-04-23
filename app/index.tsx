@@ -2,8 +2,8 @@ import { AppButton } from "@/components/ui/AppButton";
 import { Colors } from "@/constants/theme";
 import { Typography } from "@/constants/Typography";
 import { apiClient } from "@/utils/api";
+import { storage } from "@/utils/storage";
 import { AntDesign, Feather } from "@expo/vector-icons";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
@@ -72,10 +72,7 @@ export default function AuthOptionsScreen() {
     return (
       <LinearGradient
         colors={[Colors.gradient.start, Colors.gradient.end]}
-        style={[
-          styles.container,
-          { justifyContent: "center", alignItems: "center" },
-        ]}
+        style={[styles.container, { justifyContent: "center", alignItems: "center" }]}
       >
         <ActivityIndicator size="large" color="#FFFFFF" />
       </LinearGradient>
@@ -83,14 +80,8 @@ export default function AuthOptionsScreen() {
   }
 
   return (
-    <LinearGradient
-      colors={[Colors.gradient.start, Colors.gradient.end]}
-      style={styles.container}
-    >
-      <ScrollView
-        contentContainerStyle={styles.scrollContainer}
-        bounces={false}
-      >
+    <LinearGradient colors={[Colors.gradient.start, Colors.gradient.end]} style={styles.container}>
+      <ScrollView contentContainerStyle={styles.scrollContainer} bounces={false}>
         {/* Header (same as first screen) */}
         <View style={styles.header}>
           <Text style={styles.titleText}>Welcome to Soul AI</Text>
@@ -136,13 +127,12 @@ export default function AuthOptionsScreen() {
         {/* Divider (same position as first screen) */}
         <View style={styles.dividerContainer}>
           <Text style={styles.termsText}>
-            By tapping Continue or logging into an existing Soul account, you
-            agree to our <Text style={styles.linkText} onPress={() => router.push("/terms" as any)}>Terms</Text> and
-            acknowledge that you have read our{" "}
-            <Text
-              style={styles.linkText}
-              onPress={() => router.push("/privacy-policy")}
-            >
+            By tapping Continue or logging into an existing Soul account, you agree to our{" "}
+            <Text style={styles.linkText} onPress={() => router.push("/terms" as any)}>
+              Terms
+            </Text>{" "}
+            and acknowledge that you have read our{" "}
+            <Text style={styles.linkText} onPress={() => router.push("/privacy-policy")}>
               Privacy Policy
             </Text>
             .
@@ -153,8 +143,7 @@ export default function AuthOptionsScreen() {
         <View style={styles.bottomLinkContainer}>
           <TouchableOpacity onPress={() => router.push("/signup")}>
             <Text style={styles.bottomLinkText}>
-              Don’t have an account?{" "}
-              <Text style={styles.boldText}>Create one</Text>
+              Don’t have an account? <Text style={styles.boldText}>Create one</Text>
             </Text>
           </TouchableOpacity>
         </View>

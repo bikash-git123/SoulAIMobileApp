@@ -4,26 +4,14 @@ import { Typography } from "@/constants/Typography";
 import { AntDesign, Feather } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export default function AuthOptionsScreen() {
   const router = useRouter();
 
   return (
-    <LinearGradient
-      colors={[Colors.gradient.start, Colors.gradient.end]}
-      style={styles.container}
-    >
-      <ScrollView
-        contentContainerStyle={styles.scrollContainer}
-        bounces={false}
-      >
+    <LinearGradient colors={[Colors.gradient.start, Colors.gradient.end]} style={styles.container}>
+      <ScrollView contentContainerStyle={styles.scrollContainer} bounces={false}>
         {/* Header */}
         <View style={styles.header}>
           <Text style={styles.titleText}>Welcome to Soul AI</Text>
@@ -71,13 +59,12 @@ export default function AuthOptionsScreen() {
         {/* Terms */}
         <View style={styles.termsContainer}>
           <Text style={styles.termsText}>
-            By tapping Continue or logging into an existing Soul account, you
-            agree to our <Text style={styles.linkText} onPress={() => router.push("/terms" as any)}>Terms</Text> and
-            acknowledge that you have read our{" "}
-            <Text
-              style={styles.linkText}
-              onPress={() => router.push("/privacy-policy")}
-            >
+            By tapping Continue or logging into an existing Soul account, you agree to our{" "}
+            <Text style={styles.linkText} onPress={() => router.push("/terms" as any)}>
+              Terms
+            </Text>{" "}
+            and acknowledge that you have read our{" "}
+            <Text style={styles.linkText} onPress={() => router.push("/privacy-policy")}>
               Privacy Policy
             </Text>
             , which explains how to opt out of offers and promos.
@@ -88,8 +75,7 @@ export default function AuthOptionsScreen() {
         <View style={styles.bottomLinkContainer}>
           <TouchableOpacity onPress={() => router.push("/signup")}>
             <Text style={styles.bottomLinkText}>
-              Don’t have an account?{" "}
-              <Text style={styles.boldText}>Create one</Text>
+              Don’t have an account? <Text style={styles.boldText}>Create one</Text>
             </Text>
           </TouchableOpacity>
         </View>
