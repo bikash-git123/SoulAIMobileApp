@@ -1,12 +1,13 @@
+import { SocialButtons } from "@/components/auth/SocialButtons";
 import { AppButton } from "@/components/ui/AppButton";
 import { AppInput } from "@/components/ui/AppInput";
-import { API_BASE_URL } from "@/constants/Config";
 import { ENDPOINTS } from "@/constants/endpoints";
-import { storage } from "@/utils/storage";
 import { Colors } from "@/constants/theme";
 import { Typography } from "@/constants/Typography";
+import { apiClient } from "@/utils/api";
+import { storage } from "@/utils/storage";
 import { toast } from "@/utils/toast";
-import { AntDesign, Feather } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import { useState } from "react";
@@ -37,15 +38,9 @@ export default function LoginScreen() {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`${API_BASE_URL}${ENDPOINTS.auth.login}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: email.trim(),
-          password: password,
-        }),
+      const response = await apiClient.post(ENDPOINTS.auth.login, {
+        email: email.trim(),
+        password: password,
       });
 
       const data = await response.json();
@@ -55,7 +50,7 @@ export default function LoginScreen() {
         // { "success": true, "message": "Login successful", "data": { "access_token": "..." } }
         await storage.setToken(data.data.access_token);
         toast.success("Success", data.message || "Login successful");
-        router.replace("/language");
+        router.replace("/onboarding_one");
       } else {
         // Error response
         // { "detail": { "success": false, "message": "Invalid credentials", "data": null } }
@@ -133,22 +128,7 @@ export default function LoginScreen() {
             </View>
 
             {/* Social Buttons */}
-            <View style={styles.socialContainer}>
-              <AppButton
-                title="Continue with Apple"
-                variant="social"
-                icon={<AntDesign name="apple" size={20} color="#000" />}
-                style={styles.socialBtnMargin}
-                onPress={() => {}}
-              />
-
-              <AppButton
-                title="Continue with Google"
-                variant="social"
-                icon={<AntDesign name="google" size={20} color="#DB4437" />}
-                onPress={() => {}}
-              />
-            </View>
+            <SocialButtons style={styles.socialContainer} />
           </View>
 
           {/* Bottom Link */}

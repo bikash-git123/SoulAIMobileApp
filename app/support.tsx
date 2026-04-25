@@ -1,10 +1,11 @@
 import { AppButton } from "@/components/ui/AppButton";
+import { ENDPOINTS } from "@/constants/endpoints";
 import { Typography } from "@/constants/Typography";
-import { Feather } from "@expo/vector-icons";
-import { LinearGradient } from "expo-linear-gradient";
-import { useRouter } from "expo-router";
 import { apiClient } from "@/utils/api";
 import { toast } from "@/utils/toast";
+import { Feather } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import {
   ActivityIndicator,
@@ -22,6 +23,7 @@ import { SUPPORT_OPTIONS } from "@/constants/StaticData";
 
 export default function SupportScreen() {
   const router = useRouter();
+  const { experience, tone } = useLocalSearchParams<{ experience: string; tone: string }>();
   const [selectedSupport, setSelectedSupport] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -41,8 +43,11 @@ export default function SupportScreen() {
 
     setIsLoading(true);
     try {
-      const response = await apiClient.patch("/users/me", {
+      const response = await apiClient.patch(ENDPOINTS.users.me, {
+        completed_step: 2,
+        experience: experience || null,
         support_types: selectedSupport,
+        response_styles: tone || "",
       });
 
       if (response.status === 401) {

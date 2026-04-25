@@ -7,26 +7,30 @@ export const STORAGE_KEYS = {
 export const storage = {
   async setItem(key: string, value: string) {
     try {
+      console.log(`[Storage] Setting item: ${key}`);
       await SecureStore.setItemAsync(key, value);
     } catch (error) {
-      console.error("Storage setItem error:", error);
+      console.error(`[Storage] Error setting ${key}:`, error);
     }
   },
 
   async getItem(key: string) {
     try {
-      return await SecureStore.getItemAsync(key);
+      const value = await SecureStore.getItemAsync(key);
+      console.log(`[Storage] Gettiing item: ${key}, status: ${value ? "found" : "not found"}`);
+      return value;
     } catch (error) {
-      console.error("Storage getItem error:", error);
+      console.error(`[Storage] Error getting ${key}:`, error);
       return null;
     }
   },
 
   async removeItem(key: string) {
     try {
+      console.log(`[Storage] Removing item: ${key}`);
       await SecureStore.deleteItemAsync(key);
     } catch (error) {
-      console.error("Storage removeItem error:", error);
+      console.error(`[Storage] Error removing ${key}:`, error);
     }
   },
 

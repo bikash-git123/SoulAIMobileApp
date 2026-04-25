@@ -1,14 +1,17 @@
+import { SocialButtons } from "@/components/auth/SocialButtons";
 import { AppButton } from "@/components/ui/AppButton";
 import { AppInput } from "@/components/ui/AppInput";
-import { Colors } from "@/constants/theme";
-import { API_BASE_URL } from "@/constants/Config";
 import { ENDPOINTS } from "@/constants/endpoints";
+import { Colors } from "@/constants/theme";
 import { Typography } from "@/constants/Typography";
-import { AntDesign, Feather } from "@expo/vector-icons";
+import { apiClient } from "@/utils/api";
+import { toast } from "@/utils/toast";
+import { Feather } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
+  ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -16,11 +19,7 @@ import {
   Text,
   TouchableOpacity,
   View,
-  ActivityIndicator,
 } from "react-native";
-import { toast } from "@/utils/toast";
-
-// Remove constant VALID_EMAIL as we are using a real API now
 
 export default function SignupScreen() {
   const router = useRouter();
@@ -57,15 +56,9 @@ export default function SignupScreen() {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`${API_BASE_URL}${ENDPOINTS.auth.register}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: email.trim(),
-          password: password,
-        }),
+      const response = await apiClient.post(ENDPOINTS.auth.register, {
+        email: email.trim(),
+        password: password,
       });
 
       const data = await response.json();
@@ -169,19 +162,7 @@ export default function SignupScreen() {
           </View>
 
           {/* Social Logins */}
-          <View style={styles.socialContainer}>
-            <AppButton
-              title="Apple"
-              variant="social"
-              icon={<AntDesign name="apple" size={20} color="#000" />}
-              style={styles.socialBtnMargin}
-            />
-            <AppButton
-              title="Google"
-              variant="social"
-              icon={<AntDesign name="google" size={20} color="#DB4437" />}
-            />
-          </View>
+          <SocialButtons style={styles.socialContainer} />
 
           {/* Bottom Link */}
           <View style={styles.bottomLinkContainer}>
@@ -246,9 +227,6 @@ const styles = StyleSheet.create({
   socialContainer: {
     width: "100%",
     alignItems: "center",
-  },
-  socialBtnMargin: {
-    marginBottom: 16,
   },
   bottomLinkContainer: {
     marginTop: 32,
