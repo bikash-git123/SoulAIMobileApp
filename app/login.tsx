@@ -1,6 +1,7 @@
 import { AppButton } from "@/components/ui/AppButton";
 import { AppInput } from "@/components/ui/AppInput";
 import { API_BASE_URL } from "@/constants/Config";
+import { ENDPOINTS } from "@/constants/endpoints";
 import { storage } from "@/utils/storage";
 import { Colors } from "@/constants/theme";
 import { Typography } from "@/constants/Typography";
@@ -36,7 +37,7 @@ export default function LoginScreen() {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`${API_BASE_URL}/auth/login`, {
+      const response = await fetch(`${API_BASE_URL}${ENDPOINTS.auth.login}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

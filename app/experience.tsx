@@ -16,7 +16,7 @@ import {
 } from "react-native";
 import { toast } from "@/utils/toast";
 
-const EXPERIENCE_LEVELS = ["Getting Started", "Some Experience", "Significant Experience"];
+import { EXPERIENCE_LEVELS } from "@/constants/StaticData";
 
 export default function ExperienceScreen() {
   const router = useRouter();

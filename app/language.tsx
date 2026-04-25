@@ -16,19 +16,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-const LANGUAGES = [
-  "English",
-  "Hindi",
-  "Marathi",
-  "Gujarati",
-  "Odia",
-  // 'Tamil',
-  // 'Telugu',
-  // 'Kannada',
-  // 'Malayalam',
-  // 'Punjabi',
-  // 'Bengali'
-];
+import { LANGUAGES } from "@/constants/StaticData";
 
 export default function LanguageScreen() {
   const router = useRouter();
