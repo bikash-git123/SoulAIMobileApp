@@ -28,17 +28,29 @@ export const apiClient = {
     }
 
     try {
-      const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
+      const fullUrl = `${API_BASE_URL}${endpoint}`;
+      console.log(`[NETWORK REQUEST] ${config.method || "GET"} ${fullUrl}`, {
+        headers: config.headers,
+        body: options.body,
+      });
+
+      const response = await fetch(fullUrl, config);
+      const clonedResponse = response.clone();
+
+      try {
+        const responseData = await clonedResponse.json();
+        console.log(`[NETWORK RESPONSE] ${response.status} ${fullUrl}`, responseData);
+      } catch (e) {
+        console.log(`[NETWORK RESPONSE] ${response.status} ${fullUrl} (Non-JSON or Empty)`);
+      }
 
       if (response.status === 401) {
         await storage.removeToken();
-        // Optional: You could use a global state or event emitter to trigger a redirect
-        // For now, clearing the token is the primary action.
       }
 
       return response;
     } catch (error) {
-      console.error("API Fetch Error:", error);
+      console.error("[NETWORK ERROR] API Fetch Error:", error);
       throw error;
     }
   },
@@ -53,6 +65,10 @@ export const apiClient = {
 
   async patch(endpoint: string, body: any, options: RequestOptions = {}) {
     return this.fetch(endpoint, { ...options, method: "PATCH", body });
+  },
+
+  async put(endpoint: string, body: any, options: RequestOptions = {}) {
+    return this.fetch(endpoint, { ...options, method: "PUT", body });
   },
 
   async delete(endpoint: string, options: RequestOptions = {}) {

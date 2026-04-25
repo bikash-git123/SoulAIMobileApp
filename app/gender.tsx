@@ -10,14 +10,15 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { useMemo, useState } from "react";
 import {
   ActivityIndicator,
+  Keyboard,
   KeyboardAvoidingView,
   Platform,
-  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
+import { ScrollView as GestureScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { COUNTRIES, GENDERS } from "@/constants/StaticData";
@@ -60,6 +61,7 @@ export default function GenderScreen() {
         age: parseInt(age),
         country: countrySearch,
         gender: selectedGender,
+        completed_step: 1,
       });
 
       if (response.status === 401) {
@@ -71,7 +73,7 @@ export default function GenderScreen() {
       const data = await response.json();
 
       if (response.ok) {
-        router.replace("/onboarding");
+        router.replace("/onboarding_two");
       } else {
         console.log(data);
         const errorMsg = data.detail?.message || data.message || "Failed to update profile.";
@@ -94,7 +96,11 @@ export default function GenderScreen() {
     if (!visible || options.length === 0) return null;
     return (
       <View style={styles.dropdownContainer}>
-        <ScrollView style={{ maxHeight: 200 }} keyboardShouldPersistTaps="handled">
+        <GestureScrollView
+          style={{ maxHeight: 250 }}
+          keyboardShouldPersistTaps="handled"
+          nestedScrollEnabled={true}
+        >
           {options.map((option) => (
             <TouchableOpacity
               key={option}
@@ -107,7 +113,7 @@ export default function GenderScreen() {
               <Text style={styles.dropdownOptionText}>{option}</Text>
             </TouchableOpacity>
           ))}
-        </ScrollView>
+        </GestureScrollView>
       </View>
     );
   };
@@ -123,7 +129,7 @@ export default function GenderScreen() {
         <KeyboardAvoidingView
           style={{ flex: 1 }}
           behavior={Platform.OS === "ios" ? "padding" : "height"}
-          keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
+          keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 40}
         >
           {/* Top Navigation & Progress */}
           <View style={styles.topNavContainer}>
@@ -135,7 +141,7 @@ export default function GenderScreen() {
             </View>
           </View>
 
-          <ScrollView
+          <GestureScrollView
             contentContainerStyle={styles.scrollContainer}
             bounces={false}
             keyboardShouldPersistTaps="handled"
@@ -188,6 +194,7 @@ export default function GenderScreen() {
                   activeOpacity={0.8}
                   style={styles.fullWidth}
                   onPress={() => {
+                    Keyboard.dismiss(); // Dismiss keyboard to prevent overlap
                     setShowGenderDropdown(!showGenderDropdown);
                     setShowCountryDropdown(false);
                   }}
@@ -220,7 +227,7 @@ export default function GenderScreen() {
                 icon={isLoading ? <ActivityIndicator color="#FFF" /> : undefined}
               />
             </View>
-          </ScrollView>
+          </GestureScrollView>
         </KeyboardAvoidingView>
       </SafeAreaView>
     </LinearGradient>
@@ -260,7 +267,7 @@ const styles = StyleSheet.create({
   scrollContainer: {
     flexGrow: 1,
     paddingHorizontal: 28,
-    paddingBottom: 40,
+    paddingBottom: 150, // Significant bottom padding to ensure the Next button can be scrolled above the keyboard
   },
   header: {
     alignItems: "center",
@@ -282,6 +289,7 @@ const styles = StyleSheet.create({
   },
   formContainer: {
     width: "100%",
+    paddingBottom: 40,
   },
   inputWrapper: {
     width: "100%",
@@ -312,7 +320,8 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
     shadowRadius: 8,
-    elevation: 5,
+    elevation: 10,
+    zIndex: 1000,
     overflow: "hidden",
   },
   dropdownOption: {

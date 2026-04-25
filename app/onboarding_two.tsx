@@ -1,21 +1,13 @@
 import { AppButton } from "@/components/ui/AppButton";
 import { Typography } from "@/constants/Typography";
-import { Feather } from "@expo/vector-icons";
+import { normalize } from "@/utils/responsive";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
-import {
-  BackHandler,
-  KeyboardAvoidingView,
-  Platform,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { useEffect } from "react";
+import { BackHandler, KeyboardAvoidingView, Platform, StyleSheet, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function OnboardingScreen() {
+export default function OnboardingTwoScreen() {
   const router = useRouter();
 
   useEffect(() => {
@@ -31,8 +23,8 @@ export default function OnboardingScreen() {
 
   return (
     <LinearGradient
-      colors={["#FFFFFF", "#E2F4FF"]}
-      start={{ x: 0.1, y: 0.1 }}
+      colors={["#3BC0EB", "#5858E8"]}
+      start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
       style={styles.container}
     >
@@ -41,16 +33,6 @@ export default function OnboardingScreen() {
           style={{ flex: 1 }}
           behavior={Platform.OS === "ios" ? "padding" : undefined}
         >
-          {/* Top Navigation & Progress */}
-          <View style={styles.topNavContainer}>
-            <TouchableOpacity onPress={() => BackHandler.exitApp()} style={styles.backButton}>
-              <Feather name="arrow-left" size={24} color="#111111" />
-            </TouchableOpacity>
-            <View style={styles.progressTrack}>
-              <View style={styles.progressFill} />
-            </View>
-          </View>
-
           <View style={styles.content}>
             {/* Header Section */}
             <View style={styles.headerContainer}>
@@ -92,46 +74,23 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
     paddingBottom: 40,
   },
-  topNavContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 24,
-    paddingTop: 16,
-    paddingBottom: 24,
-  },
-  backButton: {
-    padding: 4,
-    marginRight: 16,
-  },
-  progressTrack: {
-    flex: 1,
-    height: 4,
-    backgroundColor: "rgba(60, 97, 221, 0.1)",
-    borderRadius: 2,
-    overflow: "hidden",
-  },
-  progressFill: {
-    width: "52%",
-    height: "100%",
-    backgroundColor: "#3C61DD",
-  },
   headerContainer: {
     alignItems: "center",
-    marginTop: 40,
+    marginTop: 150,
   },
   title: {
     fontFamily: Typography.fonts.regular,
-    fontSize: 36,
-    color: "#3C61DD",
+    fontSize: normalize(32),
+    color: "#FFFFFF",
     textAlign: "center",
     marginBottom: 16,
   },
   subtitle: {
-    fontFamily: Typography.fonts.regular,
-    fontSize: 20,
-    color: "#9BBFF2", // A lighter blue shade matching the image
+    fontFamily: Typography.fonts.medium,
+    fontSize: normalize(16),
+    color: "rgba(255, 255, 255, 0.7)",
     textAlign: "center",
-    lineHeight: 28,
+    lineHeight: 22,
   },
   bottomContainer: {
     width: "100%",
@@ -147,11 +106,12 @@ const styles = StyleSheet.create({
     height: 56,
   },
   footerText: {
-    fontFamily: Typography.fonts.bold,
-    fontSize: 13,
-    color: "#3C61DD",
+    fontFamily: Typography.fonts.regular,
+    fontSize: normalize(12),
+    color: "#FFFFFF",
     textAlign: "center",
     lineHeight: 18,
     paddingHorizontal: 20,
+    opacity: 0.9,
   },
 });

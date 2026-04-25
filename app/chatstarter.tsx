@@ -58,7 +58,7 @@ export default function ChatStarterScreen() {
                 onPress={() => {}}
                 hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
               >
-                <Feather name="menu" size={normalize(28)} color="#333" />
+                <Feather name="menu" size={28} color="#333" />
               </TouchableOpacity>
               <TouchableOpacity onPress={() => {}}>
                 <View style={styles.avatarContainer}>
@@ -120,10 +120,10 @@ export default function ChatStarterScreen() {
                   />
                 </View>
                 <TouchableOpacity style={styles.iconButton}>
-                  <Feather name="mic" size={normalize(24)} color="#333" />
+                  <Feather name="mic" size={24} color="#333" />
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.iconButton} onPress={handleSend}>
-                  <Ionicons name="paper-plane-outline" size={normalize(24)} color="#333" />
+                  <Ionicons name="paper-plane-outline" size={24} color="#333" />
                 </TouchableOpacity>
               </View>
             </View>
@@ -148,14 +148,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingHorizontal: normalize(24),
-    paddingTop: normalize(10),
-    paddingBottom: normalize(20),
+    paddingHorizontal: 24,
+    paddingTop: 10,
+    paddingBottom: 20,
   },
   avatarContainer: {
-    width: normalize(40),
-    height: normalize(40),
-    borderRadius: normalize(20),
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     backgroundColor: "#D1E5FF",
     overflow: "hidden",
     borderWidth: 1,
@@ -166,37 +166,35 @@ const styles = StyleSheet.create({
     height: "100%",
   },
   scrollContent: {
-    paddingHorizontal: normalize(24),
-    paddingBottom: normalize(20), // Standard padding, no longer needs massive hack
+    paddingHorizontal: 24,
+    paddingBottom: 20,
   },
   header: {
     alignItems: "center",
-    marginTop: normalize(10),
-    marginBottom: normalize(50),
+    marginTop: 10,
+    marginBottom: 50,
   },
   greetingText: {
     fontFamily: Typography.fonts.medium,
     fontSize: normalize(32),
     color: "#000000",
     textAlign: "center",
-    lineHeight: normalize(42),
+    lineHeight: 42,
   },
   updateText: {
     fontFamily: Typography.fonts.medium,
     fontSize: normalize(14),
     color: "#464646",
-    marginTop: normalize(12),
+    marginTop: 12,
   },
   therapyList: {
     alignItems: "center",
-    // marginBottom: normalize(40), // Reduced from fixed 80 for better layout
   },
   therapyButton: {
-    paddingVertical: normalize(12),
-    paddingHorizontal: normalize(24),
-    borderRadius: normalize(25),
-    marginBottom: normalize(12),
-    // width: "80%", // Responsive width
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 25,
+    marginBottom: 12,
     maxWidth: 320,
     alignItems: "center",
     shadowColor: "#000",
@@ -212,19 +210,19 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   promptsContainer: {
-    marginBottom: normalize(20),
+    marginBottom: 20,
     alignItems: "center",
-    marginTop: normalize(38),
+    marginTop: 38,
   },
   promptCard: {
     flexDirection: "row",
     alignItems: "center",
     alignSelf: "center",
     backgroundColor: Colors.brand.cardBackground,
-    paddingVertical: normalize(12),
-    paddingHorizontal: normalize(24),
-    borderRadius: normalize(30),
-    marginBottom: normalize(12),
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 30,
+    marginBottom: 12,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.05,
@@ -232,11 +230,11 @@ const styles = StyleSheet.create({
     elevation: 0.5,
   },
   dot: {
-    width: normalize(8),
-    height: normalize(8),
-    borderRadius: normalize(4),
+    width: 8,
+    height: 8,
+    borderRadius: 4,
     backgroundColor: Colors.brand.dotGreen,
-    marginRight: normalize(12),
+    marginRight: 12,
   },
   promptText: {
     fontFamily: Typography.fonts.medium,
@@ -245,22 +243,22 @@ const styles = StyleSheet.create({
   },
   bottomBarContainer: {
     backgroundColor: "transparent",
-    paddingBottom: normalize(10),
+    paddingBottom: 10,
   },
   bottomBar: {
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: normalize(20),
-    paddingVertical: normalize(10),
+    paddingHorizontal: 20,
+    paddingVertical: 10,
   },
   inputWrapper: {
     flex: 1,
     backgroundColor: Colors.brand.inputBackground,
-    height: normalize(50),
-    borderRadius: normalize(25),
+    height: 50,
+    borderRadius: 25,
     justifyContent: "center",
-    paddingHorizontal: normalize(20),
-    marginRight: normalize(10),
+    paddingHorizontal: 20,
+    marginRight: 10,
   },
   input: {
     fontFamily: Typography.fonts.regular,
@@ -268,8 +266,8 @@ const styles = StyleSheet.create({
     color: "#333",
   },
   iconButton: {
-    width: normalize(44),
-    height: normalize(44),
+    width: 44,
+    height: 44,
     justifyContent: "center",
     alignItems: "center",
   },

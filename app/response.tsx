@@ -1,8 +1,10 @@
 import { AppButton } from "@/components/ui/AppButton";
+import { TONE_OPTIONS } from "@/constants/StaticData";
 import { Typography } from "@/constants/Typography";
+import { toast } from "@/utils/toast";
 import { Feather } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import {
   KeyboardAvoidingView,
@@ -14,12 +16,10 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { toast } from "@/utils/toast";
-
-import { TONE_OPTIONS } from "@/constants/StaticData";
 
 export default function ResponseScreen() {
   const router = useRouter();
+  const { experience } = useLocalSearchParams<{ experience: string }>();
   const [selectedTone, setSelectedTone] = useState<string | null>(null);
 
   return (
@@ -84,7 +84,10 @@ export default function ResponseScreen() {
                   toast.error("Error", "Please select your preferred response tone");
                   return;
                 }
-                router.push("/support");
+                router.push({
+                  pathname: "/support",
+                  params: { experience, tone: selectedTone },
+                } as any);
               }}
             />
           </ScrollView>

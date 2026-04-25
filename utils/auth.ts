@@ -1,5 +1,5 @@
-import { API_BASE_URL } from "@/constants/Config";
 import { ENDPOINTS } from "@/constants/endpoints";
+import { apiClient } from "@/utils/api";
 import { storage } from "@/utils/storage";
 import { toast } from "@/utils/toast";
 import { router } from "expo-router";
@@ -12,12 +12,8 @@ export const AuthService = {
    */
   async loginWithSocialToken(provider: SocialProvider, token: string) {
     try {
-      const response = await fetch(`${API_BASE_URL}${ENDPOINTS.auth.social(provider)}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ token }),
+      const response = await apiClient.post(ENDPOINTS.auth.social(provider), {
+        token,
       });
 
       const data = await response.json();

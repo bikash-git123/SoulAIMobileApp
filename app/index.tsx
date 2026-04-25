@@ -1,66 +1,66 @@
+import { SocialButtons } from "@/components/auth/SocialButtons";
 import { AppButton } from "@/components/ui/AppButton";
+import { ENDPOINTS } from "@/constants/endpoints";
 import { Colors } from "@/constants/theme";
 import { Typography } from "@/constants/Typography";
-import { ENDPOINTS } from "@/constants/endpoints";
 import { apiClient } from "@/utils/api";
 import { storage } from "@/utils/storage";
-import { AntDesign, Feather } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
-  Platform,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
-import { useGoogleAuth } from "@/hooks/useGoogleAuth";
+import { ApiResponse, UserProfile } from "@/types/api";
 
 export default function AuthOptionsScreen() {
   const router = useRouter();
   const [isCheckingToken, setIsCheckingToken] = useState(true);
-  const { signIn: googleSignIn, isLoading: isGoogleLoading } = useGoogleAuth();
 
   useEffect(() => {
     const checkToken = async () => {
       try {
         const token = await storage.getToken();
-        if (token) {
-          try {
-            const response = await apiClient.get(ENDPOINTS.users.me);
+        if (!token) {
+          setIsCheckingToken(false);
+          return;
+        }
 
-            // If token was expired (401), apiClient already removed it.
-            // We just need to check if we should proceed.
-            if (response.status === 401) {
-              setIsCheckingToken(false);
-              return;
-            }
+        try {
+          const response = await apiClient.get(ENDPOINTS.users.me);
 
-            const result = await response.json();
-
-            if (result.success && result.data) {
-              const { full_name, age, country, gender } = result.data;
-              if (full_name && age && country && gender) {
-                router.replace("/onboarding");
-              } else {
-                const missing = [];
-                if (!full_name) missing.push("full_name");
-                if (!age) missing.push("age");
-                if (!country) missing.push("country");
-                if (!gender) missing.push("gender");
-                console.log("Missing profile details:", missing.join(", "));
-                router.replace("/language");
-              }
-            } else {
-              router.replace("/language");
-            }
-          } catch (apiError) {
-            console.error("Error fetching user profile:", apiError);
-            router.replace("/language");
+          // If token was expired (401), apiClient already handles removal/error navigation
+          if (response.status === 401) {
+            setIsCheckingToken(false);
+            return;
           }
+
+          const result: ApiResponse<UserProfile> = await response.json();
+
+          if (result.success && result.data) {
+            const { completed_step } = result.data;
+            console.log(`[Auth] User profile fetched. Completed Step: ${completed_step}`);
+
+            if (completed_step === 0) {
+              router.replace("/onboarding_one");
+            } else if (completed_step === 1) {
+              router.replace("/onboarding_two");
+            } else {
+              router.replace("/chatstarter");
+            }
+          } else {
+            console.warn("[Auth] Failed to fetch valid user data, showing auth options");
+            setIsCheckingToken(false);
+          }
+        } catch (apiError) {
+          console.error("[Auth] API Error fetching profile:", apiError);
+          setIsCheckingToken(false);
         }
       } catch (e) {
         console.error("Error checking token:", e);
@@ -113,26 +113,7 @@ export default function AuthOptionsScreen() {
             onPress={() => router.push("/login")}
           />
 
-          {Platform.OS === "ios" && (
-            <AppButton
-              title="Continue with Apple"
-              variant="social"
-              icon={<AntDesign name="apple" size={20} color="#000" />}
-              style={styles.inputMargin}
-              onPress={() => {
-                // Apple Sign In implementation would go here
-                console.log("Apple Sign In clicked");
-              }}
-            />
-          )}
-
-          <AppButton
-            title="Continue with Google"
-            variant="social"
-            icon={<AntDesign name="google" size={20} color="#DB4437" />}
-            onPress={googleSignIn}
-            disabled={isGoogleLoading}
-          />
+          <SocialButtons />
         </View>
 
         {/* Divider (same position as first screen) */}

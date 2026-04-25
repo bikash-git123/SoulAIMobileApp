@@ -7,13 +7,13 @@ import { useState } from "react";
 import {
   KeyboardAvoidingView,
   Platform,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { toast } from "@/utils/toast";
 
 import { EXPERIENCE_LEVELS } from "@/constants/StaticData";
@@ -84,7 +84,10 @@ export default function ExperienceScreen() {
                   toast.error("Error", "Please select your experience level");
                   return;
                 }
-                router.push("/response");
+                router.push({
+                  pathname: "/response",
+                  params: { experience: selectedExperience },
+                } as any);
               }}
             />
           </ScrollView>

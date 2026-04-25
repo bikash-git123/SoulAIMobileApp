@@ -15,7 +15,6 @@ export const normalize = (size: number) => {
   if (Platform.OS === "ios") {
     return Math.round(PixelRatio.roundToNearestPixel(newSize));
   } else {
-    // Android often renders fonts/elements slightly larger relative to screen
     return Math.round(PixelRatio.roundToNearestPixel(newSize)) - 2;
   }
 };

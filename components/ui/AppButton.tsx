@@ -1,14 +1,14 @@
+import { Typography } from "@/constants/Typography";
 import React from "react";
 import {
-  TouchableOpacity,
-  Text,
-  StyleSheet,
-  TouchableOpacityProps,
   StyleProp,
-  ViewStyle,
+  StyleSheet,
+  Text,
   TextStyle,
+  TouchableOpacity,
+  TouchableOpacityProps,
+  ViewStyle,
 } from "react-native";
-import { Typography } from "@/constants/Typography";
 
 export interface AppButtonProps extends TouchableOpacityProps {
   title: string;
@@ -37,8 +37,8 @@ export const AppButton = ({
       onPress={onPress}
     >
       {icon &&
-        React.cloneElement(icon as React.ReactElement, {
-          style: [styles.icon, (icon as React.ReactElement).props.style],
+        React.cloneElement(icon as React.ReactElement<any>, {
+          style: [styles.icon, (icon as React.ReactElement<any>).props.style],
         })}
       <Text style={[styles.baseText, isSocial ? styles.socialText : styles.primaryText, textStyle]}>
         {title}
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 14,
     paddingHorizontal: 16,
-    height: 50,
+    height: 52,
     width: "100%",
   },
   primaryButton: {

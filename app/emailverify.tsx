@@ -1,24 +1,22 @@
 import { AppButton } from "@/components/ui/AppButton";
 import { OtpInput } from "@/components/ui/OtpInput";
-import { Colors } from "@/constants/theme";
-import { API_BASE_URL } from "@/constants/Config";
 import { ENDPOINTS } from "@/constants/endpoints";
+import { Colors } from "@/constants/theme";
 import { Typography } from "@/constants/Typography";
+import { apiClient } from "@/utils/api";
+import { toast } from "@/utils/toast";
 import { LinearGradient } from "expo-linear-gradient";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import {
+  ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
-  ActivityIndicator,
 } from "react-native";
-import { toast } from "@/utils/toast";
-
-// Remove VALID_OTP as we are using real API now
 
 export default function EmailVerifyScreen() {
   const router = useRouter();
@@ -35,15 +33,9 @@ export default function EmailVerifyScreen() {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`${API_BASE_URL}${ENDPOINTS.auth.verifyOtp}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: typeof email === "string" ? email : email?.[0] || "",
-          otp: otp,
-        }),
+      const response = await apiClient.post(ENDPOINTS.auth.verifyOtp, {
+        email: typeof email === "string" ? email : email?.[0] || "",
+        otp: otp,
       });
 
       const data = await response.json();
