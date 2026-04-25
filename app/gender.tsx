@@ -1,6 +1,7 @@
 import { AppButton } from "@/components/ui/AppButton";
 import { AppInput } from "@/components/ui/AppInput";
 import { Typography } from "@/constants/Typography";
+import { ENDPOINTS } from "@/constants/endpoints";
 import { apiClient } from "@/utils/api";
 import { toast } from "@/utils/toast";
 import { Feather } from "@expo/vector-icons";
@@ -19,8 +20,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-const COUNTRIES = ["India", "USA", "United Kingdom", "Canada", "Australia", "Germany", "France"];
-const GENDERS = ["Male", "Female", "Other"];
+import { COUNTRIES, GENDERS } from "@/constants/StaticData";
 
 export default function GenderScreen() {
   const router = useRouter();
@@ -55,7 +55,7 @@ export default function GenderScreen() {
 
     setIsLoading(true);
     try {
-      const response = await apiClient.patch("/users/me", {
+      const response = await apiClient.patch(ENDPOINTS.users.me, {
         full_name: fullName,
         age: parseInt(age),
         country: countrySearch,
@@ -122,7 +122,8 @@ export default function GenderScreen() {
       <SafeAreaView style={styles.safeArea}>
         <KeyboardAvoidingView
           style={{ flex: 1 }}
-          behavior={Platform.OS === "ios" ? "padding" : undefined}
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
         >
           {/* Top Navigation & Progress */}
           <View style={styles.topNavContainer}>
@@ -232,7 +233,6 @@ const styles = StyleSheet.create({
   },
   safeArea: {
     flex: 1,
-    paddingTop: Platform.OS === "android" ? 40 : 0,
   },
   topNavContainer: {
     flexDirection: "row",

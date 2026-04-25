@@ -43,8 +43,6 @@ export default function RootLayout() {
       <Stack>
         {/* splash screen we built the primary initial route */}
         <Stack.Screen name="index" options={{ headerShown: false }} />
-        {/* loginoptions screen full screen without the default header */}
-        <Stack.Screen name="loginoptions" options={{ headerShown: false }} />
         {/* login screen full screen without the default header */}
         <Stack.Screen name="login" options={{ headerShown: false }} />
         {/* signup screen full screen without the default header */}

@@ -1,6 +1,7 @@
 import { AppButton } from "@/components/ui/AppButton";
 import { Colors } from "@/constants/theme";
 import { Typography } from "@/constants/Typography";
+import { ENDPOINTS } from "@/constants/endpoints";
 import { apiClient } from "@/utils/api";
 import { storage } from "@/utils/storage";
 import { AntDesign, Feather } from "@expo/vector-icons";
@@ -9,16 +10,19 @@ import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
+import { useGoogleAuth } from "@/hooks/useGoogleAuth";
 
 export default function AuthOptionsScreen() {
   const router = useRouter();
   const [isCheckingToken, setIsCheckingToken] = useState(true);
+  const { signIn: googleSignIn, isLoading: isGoogleLoading } = useGoogleAuth();
 
   useEffect(() => {
     const checkToken = async () => {
@@ -26,7 +30,7 @@ export default function AuthOptionsScreen() {
         const token = await storage.getToken();
         if (token) {
           try {
-            const response = await apiClient.get("/users/me");
+            const response = await apiClient.get(ENDPOINTS.users.me);
 
             // If token was expired (401), apiClient already removed it.
             // We just need to check if we should proceed.
@@ -109,18 +113,25 @@ export default function AuthOptionsScreen() {
             onPress={() => router.push("/login")}
           />
 
-          <AppButton
-            title="Continue with Apple"
-            variant="social"
-            icon={<AntDesign name="apple" size={20} color="#000" />}
-            style={styles.inputMargin}
-            onPress={() => {}}
-          />
+          {Platform.OS === "ios" && (
+            <AppButton
+              title="Continue with Apple"
+              variant="social"
+              icon={<AntDesign name="apple" size={20} color="#000" />}
+              style={styles.inputMargin}
+              onPress={() => {
+                // Apple Sign In implementation would go here
+                console.log("Apple Sign In clicked");
+              }}
+            />
+          )}
 
           <AppButton
             title="Continue with Google"
             variant="social"
             icon={<AntDesign name="google" size={20} color="#DB4437" />}
+            onPress={googleSignIn}
+            disabled={isGoogleLoading}
           />
         </View>
 

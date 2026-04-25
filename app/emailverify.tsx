@@ -2,6 +2,7 @@ import { AppButton } from "@/components/ui/AppButton";
 import { OtpInput } from "@/components/ui/OtpInput";
 import { Colors } from "@/constants/theme";
 import { API_BASE_URL } from "@/constants/Config";
+import { ENDPOINTS } from "@/constants/endpoints";
 import { Typography } from "@/constants/Typography";
 import { LinearGradient } from "expo-linear-gradient";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -34,7 +35,7 @@ export default function EmailVerifyScreen() {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`${API_BASE_URL}/auth/verify-otp`, {
+      const response = await fetch(`${API_BASE_URL}${ENDPOINTS.auth.verifyOtp}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

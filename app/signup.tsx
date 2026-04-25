@@ -2,6 +2,7 @@ import { AppButton } from "@/components/ui/AppButton";
 import { AppInput } from "@/components/ui/AppInput";
 import { Colors } from "@/constants/theme";
 import { API_BASE_URL } from "@/constants/Config";
+import { ENDPOINTS } from "@/constants/endpoints";
 import { Typography } from "@/constants/Typography";
 import { AntDesign, Feather } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
@@ -56,7 +57,7 @@ export default function SignupScreen() {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`${API_BASE_URL}/auth/register`, {
+      const response = await fetch(`${API_BASE_URL}${ENDPOINTS.auth.register}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

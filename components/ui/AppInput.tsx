@@ -1,18 +1,21 @@
 import React from "react";
+import type { StyleProp, ViewStyle, TextStyle } from "react-native";
 import { View, TextInput, StyleSheet, TextInputProps } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { Typography } from "@/constants/Typography";
 
-export interface AppInputProps extends TextInputProps {
+export interface AppInputProps extends Omit<TextInputProps, "style"> {
   iconName?: keyof typeof Feather.glyphMap;
   rightIcon?: React.ReactNode;
+  style?: StyleProp<ViewStyle>;
+  inputStyle?: StyleProp<TextStyle>;
 }
 
-export const AppInput = ({ iconName, rightIcon, style, ...props }: AppInputProps) => {
+export const AppInput = ({ iconName, rightIcon, style, inputStyle, ...props }: AppInputProps) => {
   return (
     <View style={[styles.container, style]}>
       {iconName && <Feather name={iconName} size={20} color="#555555" style={styles.icon} />}
-      <TextInput style={styles.input} placeholderTextColor="#8A8A8E" {...props} />
+      <TextInput style={[styles.input, inputStyle]} placeholderTextColor="#8A8A8E" {...props} />
       {rightIcon && <View style={styles.rightIcon}>{rightIcon}</View>}
     </View>
   );

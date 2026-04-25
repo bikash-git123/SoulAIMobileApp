@@ -16,14 +16,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { toast } from "@/utils/toast";
 
-const TONE_OPTIONS = [
-  "Warm and Nurturing",
-  "Professional",
-  "Casual and Friendly",
-  "Direct and Straightforward",
-  "Motivational",
-  "Balanced",
-];
+import { TONE_OPTIONS } from "@/constants/StaticData";
 
 export default function ResponseScreen() {
   const router = useRouter();

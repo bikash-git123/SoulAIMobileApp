@@ -18,14 +18,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-const SUPPORT_OPTIONS = [
-  "Stress",
-  "Relationship",
-  "Anxiety",
-  "Work / School",
-  "Loneliness",
-  "Other",
-];
+import { SUPPORT_OPTIONS } from "@/constants/StaticData";
 
 export default function SupportScreen() {
   const router = useRouter();

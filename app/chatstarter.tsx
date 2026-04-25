@@ -18,24 +18,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-const THERAPY_TYPES = [
-  { id: "1", title: "Cognitive Therapy", color: Colors.therapy.orange },
-  {
-    id: "2",
-    title: "Acceptance and Commitment Therapy",
-    color: Colors.therapy.blue,
-  },
-  {
-    id: "3",
-    title: "Dialectical Behavior Therapy",
-    color: Colors.therapy.purple,
-  },
-  { id: "4", title: "Mindfulness Based", color: Colors.therapy.orange },
-  { id: "5", title: "Psychodynamic", color: Colors.therapy.blue },
-  { id: "6", title: "Solution focused", color: Colors.therapy.purple },
-];
-
-const CHAT_PROMPTS = ["I want to talk about my mood", "I wish to talk about my day"];
+import { CHAT_PROMPTS, THERAPY_TYPES } from "@/constants/StaticData";
 
 export default function ChatStarterScreen() {
   const router = useRouter();
@@ -189,30 +172,30 @@ const styles = StyleSheet.create({
   header: {
     alignItems: "center",
     marginTop: normalize(10),
-    marginBottom: normalize(30),
+    marginBottom: normalize(50),
   },
   greetingText: {
     fontFamily: Typography.fonts.medium,
     fontSize: normalize(32),
-    color: "#000",
+    color: "#000000",
     textAlign: "center",
     lineHeight: normalize(42),
   },
   updateText: {
-    fontFamily: Typography.fonts.regular,
-    fontSize: normalize(16),
-    color: "#8A8A8A",
-    marginTop: normalize(8),
+    fontFamily: Typography.fonts.medium,
+    fontSize: normalize(14),
+    color: "#464646",
+    marginTop: normalize(12),
   },
   therapyList: {
     alignItems: "center",
-    marginBottom: normalize(40), // Reduced from fixed 80 for better layout
+    // marginBottom: normalize(40), // Reduced from fixed 80 for better layout
   },
   therapyButton: {
     paddingVertical: normalize(12),
     paddingHorizontal: normalize(24),
     borderRadius: normalize(25),
-    marginBottom: normalize(8),
+    marginBottom: normalize(12),
     // width: "80%", // Responsive width
     maxWidth: 320,
     alignItems: "center",
@@ -224,14 +207,14 @@ const styles = StyleSheet.create({
   },
   therapyButtonText: {
     fontFamily: Typography.fonts.medium,
-    fontSize: normalize(18),
+    fontSize: normalize(14),
     color: "#FFF",
     textAlign: "center",
   },
   promptsContainer: {
     marginBottom: normalize(20),
     alignItems: "center",
-    marginTop: normalize(40),
+    marginTop: normalize(38),
   },
   promptCard: {
     flexDirection: "row",
@@ -256,9 +239,9 @@ const styles = StyleSheet.create({
     marginRight: normalize(12),
   },
   promptText: {
-    fontFamily: Typography.fonts.regular,
-    fontSize: normalize(18),
-    color: "#333",
+    fontFamily: Typography.fonts.medium,
+    fontSize: normalize(14),
+    color: "#000000",
   },
   bottomBarContainer: {
     backgroundColor: "transparent",
