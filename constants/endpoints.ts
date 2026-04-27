@@ -14,6 +14,9 @@ export const ENDPOINTS = {
     /** POST — Verify email OTP */
     verifyOtp: "/auth/verify-otp",
 
+    /** POST — Refresh access token */
+    refresh: "/auth/refresh",
+
     /**
      * POST — Exchange a social provider token for an app token.
      * @param provider - "google" | "apple"

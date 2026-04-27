@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { View, TextInput, StyleSheet } from "react-native";
+import { StyleSheet, TextInput, View } from "react-native";
 
 export interface OtpInputProps {
   length?: number;
@@ -23,9 +23,24 @@ export const OtpInput = ({ length = 4, onChange }: OtpInputProps) => {
   };
 
   const handleKeyPress = (e: any, index: number) => {
-    // Auto-focus previous input on backspace
-    if (e.nativeEvent.key === "Backspace" && !otp[index] && index > 0) {
-      inputRefs.current[index - 1]?.focus();
+    if (e.nativeEvent.key === "Backspace") {
+      if (otp[index]) {
+        // If current box has a value, clear it and move back
+        const newOtp = [...otp];
+        newOtp[index] = "";
+        setOtp(newOtp);
+        onChange?.(newOtp.join(""));
+        if (index > 0) {
+          inputRefs.current[index - 1]?.focus();
+        }
+      } else if (index > 0) {
+        // If current box is already empty, move back and clear previous
+        const newOtp = [...otp];
+        newOtp[index - 1] = "";
+        setOtp(newOtp);
+        onChange?.(newOtp.join(""));
+        inputRefs.current[index - 1]?.focus();
+      }
     }
   };
 
@@ -42,7 +57,7 @@ export const OtpInput = ({ length = 4, onChange }: OtpInputProps) => {
               style={styles.input}
               maxLength={1}
               keyboardType="number-pad"
-              placeholder="-"
+              // placeholder=""
               placeholderTextColor="#8A8A8E"
               value={otp[index]}
               onChangeText={(text) => handleChange(text, index)}
@@ -73,8 +88,10 @@ const styles = StyleSheet.create({
   input: {
     fontSize: 24,
     textAlign: "center",
+    textAlignVertical: "center",
     color: "#333333",
     width: "100%",
     height: "100%",
+    padding: 0,
   },
 });

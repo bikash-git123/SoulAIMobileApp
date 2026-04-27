@@ -2,8 +2,8 @@ import { AuthService } from "@/utils/auth";
 import { toast } from "@/utils/toast";
 import * as AuthSession from "expo-auth-session";
 import * as Google from "expo-auth-session/providers/google";
-import * as WebBrowser from "expo-web-browser";
 import Constants, { ExecutionEnvironment } from "expo-constants";
+import * as WebBrowser from "expo-web-browser";
 import { useEffect, useState } from "react";
 
 WebBrowser.maybeCompleteAuthSession();
@@ -23,8 +23,8 @@ export const useGoogleAuth = () => {
     ? EXPO_PROXY_REDIRECT_URI
     : AuthSession.makeRedirectUri({ scheme: "soulai" });
 
-  console.log("[GoogleAuth] Environment:", isExpoGo ? "Expo Go" : "Native Build");
-  console.log("[GoogleAuth] Redirect URI:", redirectUri);
+  // console.log("[GoogleAuth] Environment:", isExpoGo ? "Expo Go" : "Native Build");
+  // console.log("[GoogleAuth] Redirect URI:", redirectUri);
 
   // Google.useAuthRequest (from expo-auth-session/providers/google) already
   // knows Google's discovery endpoints internally — no need to pass them.
