@@ -14,6 +14,8 @@
     },
     "android": {
       "package": "com.anonymous.soulai",
+      "permissions": ["INTERNET", "ACCESS_NETWORK_STATE"],
+      "usesCleartextTraffic": true,
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
@@ -46,13 +48,19 @@
     ],
     "experiments": {
       "typedRoutes": true,
-      "reactCompiler": true
+      "reactCompiler": false
     },
     "extra": {
       "router": {},
+      "googleOAuth": {
+        "androidClientId": "629973031661-nekkjnr4ahbt31f6i1ps860n50ork0v0.apps.googleusercontent.com",
+        "iosClientId": "REPLACE_ME",
+        "webClientId": "629973031661-fqoa9j1g6c8p1suie5op8r7la823jsg9.apps.googleusercontent.com"
+      },
       "eas": {
-        "projectId": "05553e96-80d6-450b-bf91-12257346fc94"
+        "projectId": "5a0cb112-3305-48a6-a820-f69dbff309a5"
       }
-    }
+    },
+    "owner": "sandyimit"
   }
 }

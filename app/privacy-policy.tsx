@@ -137,7 +137,7 @@ export default function PrivacyPolicyScreen() {
               <View style={styles.section}>
                 <Text style={styles.sectionTitle}>6. Your Rights and Controls</Text>
                 <Text style={styles.sectionIntro}>
-                  You retain full control over your data within Soul AI. Through the app's settings
+                  You retain full control over your data within Soul AI. Through the app’s settings
                   menu, you can:
                 </Text>
                 <View style={styles.bulletList}>

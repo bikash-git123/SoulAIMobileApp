@@ -5,8 +5,8 @@ import { ENDPOINTS } from "@/constants/endpoints";
 import { Colors } from "@/constants/theme";
 import { Typography } from "@/constants/Typography";
 import { apiClient } from "@/utils/api";
-import { storage } from "@/utils/storage";
 import { AuthService } from "@/utils/auth";
+import { storage } from "@/utils/storage";
 import { toast } from "@/utils/toast";
 import { Feather } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
@@ -48,7 +48,7 @@ export default function LoginScreen() {
       if (result.data.refresh_token) {
         await storage.setRefreshToken(result.data.refresh_token);
       }
-      
+
       const { isAuthenticated, user } = await AuthService.checkAuth();
       if (isAuthenticated && user) {
         AuthService.navigateToCorrectScreen(user);
@@ -127,7 +127,7 @@ export default function LoginScreen() {
           {/* Bottom Link */}
           <View style={styles.bottomLinkContainer}>
             <TouchableOpacity activeOpacity={0.7} onPress={() => router.push("/signup")}>
-              <Text style={styles.bottomLinkText}>Don't have an account? Create one</Text>
+              <Text style={styles.bottomLinkText}>Don’t have an account? Create one</Text>
             </TouchableOpacity>
           </View>
         </ScrollView>

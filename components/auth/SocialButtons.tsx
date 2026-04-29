@@ -1,8 +1,8 @@
-import React from "react";
-import { Platform, StyleSheet, View, ViewStyle, StyleProp } from "react-native";
-import { AntDesign } from "@expo/vector-icons";
 import { AppButton } from "@/components/ui/AppButton";
 import { useGoogleAuth } from "@/hooks/useGoogleAuth";
+import { AntDesign } from "@expo/vector-icons";
+import React from "react";
+import { Platform, StyleProp, StyleSheet, View, ViewStyle } from "react-native";
 
 interface SocialButtonsProps {
   style?: StyleProp<ViewStyle>;

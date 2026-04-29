@@ -1,6 +1,7 @@
 import { AppButton } from "@/components/ui/AppButton";
 import { AppInput } from "@/components/ui/AppInput";
 import { Typography } from "@/constants/Typography";
+import { toast } from "@/utils/toast";
 import { Feather } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -15,7 +16,6 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { toast } from "@/utils/toast";
 
 export default function FullnameScreen() {
   const router = useRouter();
@@ -47,7 +47,7 @@ export default function FullnameScreen() {
           <ScrollView contentContainerStyle={styles.scrollContainer} bounces={false}>
             {/* Header */}
             <View style={styles.header}>
-              <Text style={styles.titleText}>What's your name?</Text>
+              <Text style={styles.titleText}>What’s your name?</Text>
               <Text style={styles.subtitleText}>Let us know more about you</Text>
             </View>
 

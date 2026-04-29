@@ -25,7 +25,7 @@ import { COUNTRIES, GENDERS } from "@/constants/StaticData";
 
 export default function GenderScreen() {
   const router = useRouter();
-  const { language, fullName } = useLocalSearchParams();
+  const { fullName } = useLocalSearchParams();
   const [age, setAge] = useState("");
   const [countrySearch, setCountrySearch] = useState("");
   const [selectedGender, setSelectedGender] = useState("");

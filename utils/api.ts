@@ -1,8 +1,14 @@
 import { API_BASE_URL } from "@/constants/Config";
 import { ENDPOINTS } from "@/constants/endpoints";
 import { storage } from "@/utils/storage";
+import axios, {
+  type AxiosError,
+  type AxiosRequestConfig,
+  type AxiosResponse,
+  type InternalAxiosRequestConfig,
+} from "axios";
 
-interface RequestOptions extends RequestInit {
+interface RequestOptions extends AxiosRequestConfig {
   body?: any;
   _isRetry?: boolean;
 }
@@ -17,6 +23,27 @@ export interface ApiResult<T = any> {
 let isRefreshing = false;
 let refreshPromise: Promise<string | null> | null = null;
 
+const http = axios.create({
+  baseURL: API_BASE_URL,
+  timeout: 30_000,
+});
+
+http.interceptors.request.use(async (config: InternalAxiosRequestConfig) => {
+  const token = await storage.getAccessToken();
+  config.headers = config.headers ?? {};
+
+  if (token) {
+    (config.headers as any).Authorization = `Bearer ${token}`;
+  }
+
+  // Default to JSON unless caller overrides.
+  if (!(config.headers as any)["Content-Type"] && !(config.headers as any)["content-type"]) {
+    (config.headers as any)["Content-Type"] = "application/json";
+  }
+
+  return config;
+});
+
 /**
  * Handles the token refresh logic.
  */
@@ -29,28 +56,36 @@ async function handleTokenRefresh(): Promise<string | null> {
       return null;
     }
 
-    const response = await fetch(`${API_BASE_URL}${ENDPOINTS.auth.refresh}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ refresh_token: refreshToken }),
-    });
+    const response = await http.post(
+      ENDPOINTS.auth.refresh,
+      { refresh_token: refreshToken },
+      {
+        // Avoid interceptor loops if refresh itself 401s.
+        headers: { "Content-Type": "application/json" },
+      },
+    );
 
-    const data = await response.json();
+    const data = response.data;
 
-    if (response.ok && data.success) {
-      const newAccessToken = data.data.access_token;
-      const newRefreshToken = data.data.refresh_token;
+    if (response.status >= 200 && response.status < 300 && data?.success) {
+      const newAccessToken = data.data?.access_token;
+      const newRefreshToken = data.data?.refresh_token;
 
-      await storage.setAccessToken(newAccessToken);
+      if (!newAccessToken) {
+        console.log("❌ [AUTH] Token refresh response missing access_token.");
+        return null;
+      }
+
+      await storage.setAccessToken(String(newAccessToken));
       if (newRefreshToken) {
-        await storage.setRefreshToken(newRefreshToken);
+        await storage.setRefreshToken(String(newRefreshToken));
       }
 
       console.log("✅ [AUTH] Token refreshed successfully.");
-      return newAccessToken;
+      return String(newAccessToken);
     }
 
-    console.log("❌ [AUTH] Token refresh failed:", data.message || "Unknown error");
+    console.log("❌ [AUTH] Token refresh failed:", data?.message || "Unknown error");
     return null;
   } catch (error) {
     console.error("[AUTH] Error refreshing token:", error);
@@ -59,66 +94,60 @@ async function handleTokenRefresh(): Promise<string | null> {
 }
 
 /**
- * Core fetch function with 401 interceptor and retry logic.
+ * Core axios request function with 401 retry logic.
  */
-async function fetchApi(endpoint: string, options: RequestOptions = {}): Promise<Response> {
-  const token = await storage.getAccessToken();
+async function requestAxios(
+  endpoint: string,
+  options: RequestOptions = {},
+): Promise<AxiosResponse<any>> {
+  const method = (options.method || "GET").toString().toUpperCase();
 
-  const headers: Record<string, string> = {
-    "Content-Type": "application/json",
-    ...(options.headers as Record<string, string>),
-  };
-
-  if (token) {
-    headers["Authorization"] = `Bearer ${token}`;
-  }
-
-  const config: RequestInit = {
+  const config: AxiosRequestConfig = {
     ...options,
-    headers,
+    url: endpoint,
+    method: method as any,
   };
 
-  if (options.body && typeof options.body !== "string") {
-    config.body = JSON.stringify(options.body);
+  if (options.body !== undefined) {
+    config.data = options.body;
   }
 
   const fullUrl = `${API_BASE_URL}${endpoint}`;
-  const method = config.method || "GET";
+  const timestamp = new Date().toLocaleTimeString();
+  console.log(`[${timestamp}] 🌐 [NETWORK REQUEST] ${method} ${fullUrl}`);
+  if (options.body) console.log(`[${timestamp}] 📦 [REQUEST BODY]`, options.body);
 
   try {
-    const timestamp = new Date().toLocaleTimeString();
-    console.log(`[${timestamp}] 🌐 [NETWORK REQUEST] ${method} ${fullUrl}`);
-    if (options.body) console.log(`[${timestamp}] 📦 [REQUEST BODY]`, options.body);
+    const response = await http.request(config);
+    return response;
+  } catch (err) {
+    const error = err as AxiosError;
+    const status = error.response?.status;
 
-    let response = await fetch(fullUrl, config);
+    if (status === 401 && !options._isRetry && endpoint !== ENDPOINTS.auth.refresh) {
+      console.warn(`⚠️ [AUTH] 401 Unauthorized on ${endpoint}. Attempting token refresh...`);
 
-    // Handle 401 Unauthorized
-    if (response.status === 401) {
-      if (!options._isRetry && endpoint !== ENDPOINTS.auth.refresh) {
-        console.warn(`⚠️ [AUTH] 401 Unauthorized on ${endpoint}. Attempting token refresh...`);
+      if (!isRefreshing) {
+        isRefreshing = true;
+        refreshPromise = handleTokenRefresh();
+      }
 
-        if (!isRefreshing) {
-          isRefreshing = true;
-          refreshPromise = handleTokenRefresh();
-        }
+      const newToken = await refreshPromise;
+      isRefreshing = false;
+      refreshPromise = null;
 
-        const newToken = await refreshPromise;
-        isRefreshing = false;
-        refreshPromise = null;
+      if (newToken) {
+        console.log(`🔁 [AUTH] Retrying ${method} ${endpoint} with new token...`);
+        const retryHeaders = {
+          ...(options.headers as any),
+          Authorization: `Bearer ${newToken}`,
+        };
 
-        if (newToken) {
-          console.log(`🔁 [AUTH] Retrying ${method} ${endpoint} with new token...`);
-          const retryHeaders = {
-            ...headers,
-            Authorization: `Bearer ${newToken}`,
-          };
-
-          return fetchApi(endpoint, {
-            ...options,
-            headers: retryHeaders,
-            _isRetry: true,
-          });
-        }
+        return requestAxios(endpoint, {
+          ...options,
+          headers: retryHeaders,
+          _isRetry: true,
+        });
       }
 
       console.error(`🔴 [AUTH] Authentication failed for ${endpoint}. Cleaning up session...`);
@@ -126,9 +155,6 @@ async function fetchApi(endpoint: string, options: RequestOptions = {}): Promise
       await storage.removeRefreshToken();
     }
 
-    return response;
-  } catch (error) {
-    console.error(`🚨 [NETWORK ERROR] ${method} ${fullUrl} failed:`, error);
     throw error;
   }
 }
@@ -142,20 +168,14 @@ async function request<T = any>(
 ): Promise<ApiResult<T>> {
   const fullUrl = `${API_BASE_URL}${endpoint}`;
   try {
-    const response = await fetchApi(endpoint, options);
+    const response = await requestAxios(endpoint, options);
     const status = response.status;
+    const responseData = response.data;
 
-    let responseData: any = null;
-    try {
-      const respTimestamp = new Date().toLocaleTimeString();
-      responseData = await response.json();
-      console.log(`[${respTimestamp}] 📩 [NETWORK RESPONSE] ${status} ${fullUrl}`, responseData);
-    } catch (e) {
-      const respTimestamp = new Date().toLocaleTimeString();
-      console.log(`[${respTimestamp}] 📩 [NETWORK RESPONSE] ${status} ${fullUrl} (Non-JSON or Empty)`);
-    }
+    const respTimestamp = new Date().toLocaleTimeString();
+    console.log(`[${respTimestamp}] 📩 [NETWORK RESPONSE] ${status} ${fullUrl}`, responseData);
 
-    if (response.ok) {
+    if (status >= 200 && status < 300) {
       return {
         success: true,
         data: responseData?.data !== undefined ? responseData.data : responseData,
@@ -178,11 +198,22 @@ async function request<T = any>(
       };
     }
   } catch (error: any) {
+    const axiosError = error as AxiosError;
+    const status = axiosError.response?.status ?? 0;
+    const responseData: any = axiosError.response?.data;
+
+    const errorMsg =
+      responseData?.message ||
+      responseData?.detail?.message ||
+      responseData?.detail?.[0]?.msg ||
+      axiosError.message ||
+      "An unexpected network error occurred";
+
     return {
       success: false,
-      data: null,
-      message: error?.message || "An unexpected network error occurred",
-      status: 0,
+      data: (responseData ?? null) as any,
+      message: errorMsg,
+      status,
     };
   }
 }
@@ -191,7 +222,7 @@ async function request<T = any>(
  * Public API client object.
  */
 export const apiClient = {
-  fetch: fetchApi,
+  fetch: requestAxios,
   request: request,
 
   get: <T = any>(endpoint: string, options: RequestOptions = {}) =>
