@@ -42,34 +42,25 @@ export default function SupportScreen() {
     }
 
     setIsLoading(true);
-    try {
-      const response = await apiClient.patch(ENDPOINTS.users.me, {
-        completed_step: 2,
-        experience: experience || null,
-        support_types: selectedSupport,
-        response_styles: tone || "",
-      });
+    const result = await apiClient.patch(ENDPOINTS.users.me, {
+      completed_step: 2,
+      experience: experience || null,
+      support_types: selectedSupport,
+      response_styles: tone || "",
+    });
 
-      if (response.status === 401) {
+    if (result.success) {
+      router.replace("/chatstarter");
+    } else {
+      if (result.status === 401) {
         toast.error("Session Expired", "Please login again.");
         router.replace("/");
-        return;
-      }
-
-      const data = await response.json();
-
-      if (response.ok) {
-        router.replace("/chatstarter");
       } else {
-        const errorMsg = data.detail?.message || data.message || "Failed to update support types.";
-        toast.error("Update Failed", errorMsg);
+        toast.error("Update Failed", result.message);
       }
-    } catch (error) {
-      console.error("Update Support Error:", error);
-      toast.error("Connection Error", "Could not connect to the server.");
-    } finally {
-      setIsLoading(false);
     }
+
+    setIsLoading(false);
   };
 
   return (

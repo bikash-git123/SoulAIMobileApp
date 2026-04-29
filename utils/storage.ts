@@ -1,49 +1,66 @@
 import * as SecureStore from "expo-secure-store";
 
 export const STORAGE_KEYS = {
-  USER_TOKEN: "userToken",
+  ACCESS_TOKEN: "accessToken",
+  REFRESH_TOKEN: "refreshToken",
 };
 
+async function setItem(key: string, value: string) {
+  try {
+    console.log(`[Storage] Setting item: ${key}`);
+    await SecureStore.setItemAsync(key, value);
+  } catch (error) {
+    console.error(`[Storage] Error setting ${key}:`, error);
+  }
+}
+
+async function getItem(key: string) {
+  try {
+    const value = await SecureStore.getItemAsync(key);
+    console.log(`[Storage] Gettiing item: ${key}, status: ${value ? "found" : "not found"}`);
+    return value;
+  } catch (error) {
+    console.error(`[Storage] Error getting ${key}:`, error);
+    return null;
+  }
+}
+
+async function removeItem(key: string) {
+  try {
+    console.log(`[Storage] Removing item: ${key}`);
+    await SecureStore.deleteItemAsync(key);
+  } catch (error) {
+    console.error(`[Storage] Error removing ${key}:`, error);
+  }
+}
+
 export const storage = {
-  async setItem(key: string, value: string) {
-    try {
-      console.log(`[Storage] Setting item: ${key}`);
-      await SecureStore.setItemAsync(key, value);
-    } catch (error) {
-      console.error(`[Storage] Error setting ${key}:`, error);
-    }
+  setItem,
+  getItem,
+  removeItem,
+
+  // Specialized helpers for access token
+  async getAccessToken() {
+    return getItem(STORAGE_KEYS.ACCESS_TOKEN);
   },
 
-  async getItem(key: string) {
-    try {
-      const value = await SecureStore.getItemAsync(key);
-      console.log(`[Storage] Gettiing item: ${key}, status: ${value ? "found" : "not found"}`);
-      return value;
-    } catch (error) {
-      console.error(`[Storage] Error getting ${key}:`, error);
-      return null;
-    }
+  async setAccessToken(token: string) {
+    return setItem(STORAGE_KEYS.ACCESS_TOKEN, token);
   },
 
-  async removeItem(key: string) {
-    try {
-      console.log(`[Storage] Removing item: ${key}`);
-      await SecureStore.deleteItemAsync(key);
-    } catch (error) {
-      console.error(`[Storage] Error removing ${key}:`, error);
-    }
+  async removeAccessToken() {
+    return removeItem(STORAGE_KEYS.ACCESS_TOKEN);
   },
 
-  // Specialized helpers for token
-  async getToken() {
-    return this.getItem(STORAGE_KEYS.USER_TOKEN);
+  async getRefreshToken() {
+    return getItem(STORAGE_KEYS.REFRESH_TOKEN);
   },
 
-  async setToken(token: string) {
-    return this.setItem(STORAGE_KEYS.USER_TOKEN, token);
+  async setRefreshToken(token: string) {
+    return setItem(STORAGE_KEYS.REFRESH_TOKEN, token);
   },
 
-  async removeToken() {
-    return this.removeItem(STORAGE_KEYS.USER_TOKEN);
+  async removeRefreshToken() {
+    return removeItem(STORAGE_KEYS.REFRESH_TOKEN);
   },
 };

@@ -30,35 +30,19 @@ export default function EmailVerifyScreen() {
       return;
     }
 
-    setIsLoading(true);
+    const result = await apiClient.post(ENDPOINTS.auth.verifyOtp, {
+      email: typeof email === "string" ? email : email?.[0] || "",
+      otp: otp,
+    });
 
-    try {
-      const response = await apiClient.post(ENDPOINTS.auth.verifyOtp, {
-        email: typeof email === "string" ? email : email?.[0] || "",
-        otp: otp,
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        // Success response
-        // { "success": true, "message": "OTP verified successfully. User is now verified.", "data": null }
-        toast.success("Success", data.message || "OTP verified successfully.");
-        router.push("/login");
-      } else {
-        // Error response
-        const errorMsg = data.detail?.message || data.message || "Invalid or expired OTP";
-        toast.error("Error", errorMsg);
-      }
-    } catch (error) {
-      console.error("OTP Verification Error:", error);
-      toast.error(
-        "Connection Error",
-        "Could not connect to the server. Please check your internet connection and verify the server is running.",
-      );
-    } finally {
-      setIsLoading(false);
+    if (result.success) {
+      toast.success("Success", result.message || "OTP verified successfully.");
+      router.push("/login");
+    } else {
+      toast.error("Error", result.message);
     }
+
+    setIsLoading(false);
   };
 
   return (

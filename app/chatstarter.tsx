@@ -27,6 +27,10 @@ export default function ChatStarterScreen() {
 
   const displayName = name || "Bikash";
 
+  const openChatHistory = () => {
+    router.push("/conversations");
+  };
+
   const handleSend = () => {
     if (inputText.trim()) {
       router.push({
@@ -55,7 +59,7 @@ export default function ChatStarterScreen() {
             {/* Top Bar */}
             <View style={styles.topBar}>
               <TouchableOpacity
-                onPress={() => {}}
+                onPress={openChatHistory}
                 hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
               >
                 <Feather name="menu" size={28} color="#333" />

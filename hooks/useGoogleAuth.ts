@@ -2,8 +2,9 @@ import { AuthService } from "@/utils/auth";
 import { toast } from "@/utils/toast";
 import * as AuthSession from "expo-auth-session";
 import * as Google from "expo-auth-session/providers/google";
-import * as WebBrowser from "expo-web-browser";
 import Constants, { ExecutionEnvironment } from "expo-constants";
+import * as WebBrowser from "expo-web-browser";
+import { Platform } from "react-native";
 import { useEffect, useState } from "react";
 
 WebBrowser.maybeCompleteAuthSession();
@@ -14,6 +15,31 @@ const isExpoGo = Constants.executionEnvironment === ExecutionEnvironment.StoreCl
 
 const EXPO_PROXY_REDIRECT_URI = "https://auth.expo.io/@soulbuster/soulai";
 
+type GoogleOAuthClientIds = {
+  androidClientId?: string;
+  iosClientId?: string;
+  webClientId?: string;
+};
+
+export function getGoogleOAuthClientIds(): GoogleOAuthClientIds {
+  // Read from app.json `expo.extra.googleOAuth`.
+  const extra = Constants.expoConfig?.extra as any;
+  const fromExtra: GoogleOAuthClientIds | undefined = extra?.googleOAuth;
+
+  return {
+    androidClientId: fromExtra?.androidClientId ?? undefined,
+    iosClientId: fromExtra?.iosClientId ?? undefined,
+    webClientId: fromExtra?.webClientId ?? undefined,
+  };
+}
+
+export function hasGoogleOAuthClientId(): boolean {
+  const ids = getGoogleOAuthClientIds();
+  if (Platform.OS === "android") return !!ids.androidClientId;
+  if (Platform.OS === "ios") return !!ids.iosClientId;
+  return !!ids.webClientId;
+}
+
 export const useGoogleAuth = () => {
   const [isVerifying, setIsVerifying] = useState(false);
 
@@ -23,15 +49,16 @@ export const useGoogleAuth = () => {
     ? EXPO_PROXY_REDIRECT_URI
     : AuthSession.makeRedirectUri({ scheme: "soulai" });
 
-  console.log("[GoogleAuth] Environment:", isExpoGo ? "Expo Go" : "Native Build");
-  console.log("[GoogleAuth] Redirect URI:", redirectUri);
+  // console.log("[GoogleAuth] Environment:", isExpoGo ? "Expo Go" : "Native Build");
+  // console.log("[GoogleAuth] Redirect URI:", redirectUri);
 
   // Google.useAuthRequest (from expo-auth-session/providers/google) already
   // knows Google's discovery endpoints internally — no need to pass them.
+  const { androidClientId, iosClientId, webClientId } = getGoogleOAuthClientIds();
   const [request, response, promptAsync] = Google.useAuthRequest({
-    androidClientId: process.env.EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID,
-    iosClientId: process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID,
-    webClientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID,
+    androidClientId,
+    iosClientId,
+    webClientId,
     redirectUri,
     scopes: ["openid", "profile", "email"],
   });

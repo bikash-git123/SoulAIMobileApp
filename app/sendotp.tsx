@@ -2,6 +2,7 @@ import { AppButton } from "@/components/ui/AppButton";
 import { AppInput } from "@/components/ui/AppInput";
 import { Colors } from "@/constants/theme";
 import { Typography } from "@/constants/Typography";
+import { toast } from "@/utils/toast";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import { useState } from "react";
@@ -14,7 +15,6 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { toast } from "@/utils/toast";
 
 export default function LoginScreen() {
   const router = useRouter();
@@ -70,7 +70,7 @@ export default function LoginScreen() {
           {/* Bottom Link */}
           <View style={styles.bottomLinkContainer}>
             <TouchableOpacity activeOpacity={0.7} onPress={() => router.push("/signup")}>
-              <Text style={styles.bottomLinkText}>Don't have an account? Create one</Text>
+              <Text style={styles.bottomLinkText}>Don’t have an account? Create one</Text>
             </TouchableOpacity>
           </View>
         </ScrollView>

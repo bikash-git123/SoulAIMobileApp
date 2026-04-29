@@ -1,49 +1,91 @@
 import { ENDPOINTS } from "@/constants/endpoints";
 import { apiClient } from "@/utils/api";
+import { UserProfile } from "@/types/api";
 import { storage } from "@/utils/storage";
 import { toast } from "@/utils/toast";
 import { router } from "expo-router";
 
 export type SocialProvider = "google" | "apple";
 
-export const AuthService = {
-  /**
-   * Generic handler to exchange a social provider token for an app token
-   */
-  async loginWithSocialToken(provider: SocialProvider, token: string) {
-    try {
-      const response = await apiClient.post(ENDPOINTS.auth.social(provider), {
-        token,
-      });
+/**
+ * Verifies if the user is currently authenticated with a valid session
+ */
+async function checkAuth(): Promise<{ isAuthenticated: boolean; user?: UserProfile }> {
+  const token = await storage.getAccessToken();
+  if (!token) return { isAuthenticated: false };
 
-      const data = await response.json();
+  const result = await apiClient.get<UserProfile>(ENDPOINTS.users.me);
 
-      if (response.ok) {
-        // Handle successful login
-        const accessToken = data.data?.access_token || data.access_token;
-        if (accessToken) {
-          await storage.setToken(accessToken);
-          toast.success("Success", "Authenticated successfully!");
-          router.replace("/language");
-          return { success: true, data };
-        }
+  if (result.success && result.data) {
+    return {
+      isAuthenticated: true,
+      user: result.data,
+    };
+  }
+
+  return { isAuthenticated: false };
+}
+
+/**
+ * Navigates the user to the appropriate screen based on their onboarding progress
+ */
+function navigateToCorrectScreen(user: UserProfile) {
+  const { completed_step } = user;
+  console.log(`[Auth] Navigating based on step: ${completed_step}`);
+
+  if (completed_step === 0) {
+    router.replace("/onboarding_one");
+  } else if (completed_step === 1) {
+    router.replace("/onboarding_two");
+  } else {
+    router.replace("/chatstarter");
+  }
+}
+
+/**
+ * Generic handler to exchange a social provider token for an app token
+ */
+async function loginWithSocialToken(provider: SocialProvider, token: string) {
+  const result = await apiClient.post(ENDPOINTS.auth.social(provider), { token });
+
+  if (result.success && result.data) {
+    const accessToken = result.data.access_token;
+    const refreshToken = result.data.refresh_token;
+
+    if (accessToken) {
+      await storage.setAccessToken(accessToken);
+      if (refreshToken) {
+        await storage.setRefreshToken(refreshToken);
+      }
+      toast.success("Success", "Authenticated successfully!");
+
+      const { isAuthenticated, user } = await checkAuth();
+      if (isAuthenticated && user) {
+        navigateToCorrectScreen(user);
+      } else {
+        router.replace("/onboarding_one");
       }
 
-      const errorMsg = data.message || data.detail?.message || "Login failed";
-      toast.error("Error", errorMsg);
-      return { success: false, error: errorMsg };
-    } catch (error) {
-      console.error(`AuthService [${provider}] Error:`, error);
-      toast.error("Connection Error", "Could not reach the authentication server.");
-      return { success: false, error: "Connection error" };
+      return { success: true, data: result.data };
     }
-  },
+  }
 
-  /**
-   * Clears session and redirects to login
-   */
-  async logout() {
-    await storage.removeToken();
-    router.replace("/login");
-  },
+  toast.error("Error", result.message || "Login failed");
+  return { success: false, error: result.message };
+}
+
+/**
+ * Clears session and redirects to login
+ */
+async function logout() {
+  await storage.removeAccessToken();
+  await storage.removeRefreshToken();
+  router.replace("/login");
+}
+
+export const AuthService = {
+  loginWithSocialToken,
+  checkAuth,
+  navigateToCorrectScreen,
+  logout,
 };

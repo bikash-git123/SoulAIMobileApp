@@ -1,10 +1,8 @@
 import { SocialButtons } from "@/components/auth/SocialButtons";
 import { AppButton } from "@/components/ui/AppButton";
-import { ENDPOINTS } from "@/constants/endpoints";
 import { Colors } from "@/constants/theme";
 import { Typography } from "@/constants/Typography";
-import { apiClient } from "@/utils/api";
-import { storage } from "@/utils/storage";
+import { AuthService } from "@/utils/auth";
 import { Feather } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
@@ -17,60 +15,27 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { ApiResponse, UserProfile } from "@/types/api";
 
 export default function AuthOptionsScreen() {
   const router = useRouter();
   const [isCheckingToken, setIsCheckingToken] = useState(true);
 
   useEffect(() => {
-    const checkToken = async () => {
-      try {
-        const token = await storage.getToken();
-        if (!token) {
-          setIsCheckingToken(false);
-          return;
-        }
+    const checkUserSession = async () => {
+      const { isAuthenticated, user } = await AuthService.checkAuth();
 
-        try {
-          const response = await apiClient.get(ENDPOINTS.users.me);
-
-          // If token was expired (401), apiClient already handles removal/error navigation
-          if (response.status === 401) {
-            setIsCheckingToken(false);
-            return;
-          }
-
-          const result: ApiResponse<UserProfile> = await response.json();
-
-          if (result.success && result.data) {
-            const { completed_step } = result.data;
-            console.log(`[Auth] User profile fetched. Completed Step: ${completed_step}`);
-
-            if (completed_step === 0) {
-              router.replace("/onboarding_one");
-            } else if (completed_step === 1) {
-              router.replace("/onboarding_two");
-            } else {
-              router.replace("/chatstarter");
-            }
-          } else {
-            console.warn("[Auth] Failed to fetch valid user data, showing auth options");
-            setIsCheckingToken(false);
-          }
-        } catch (apiError) {
-          console.error("[Auth] API Error fetching profile:", apiError);
-          setIsCheckingToken(false);
-        }
-      } catch (e) {
-        console.error("Error checking token:", e);
-      } finally {
+      if (!isAuthenticated || !user) {
         setIsCheckingToken(false);
+        return;
       }
+
+      AuthService.navigateToCorrectScreen(user);
+
+      setIsCheckingToken(false);
     };
 
-    checkToken();
-  }, []);
+    checkUserSession();
+  }, [router]);
 
   if (isCheckingToken) {
     return (
@@ -101,7 +66,8 @@ export default function AuthOptionsScreen() {
             title="Continue with Phone Number"
             variant="social"
             icon={<Feather name="message-circle" size={20} color="#000" />}
-            style={styles.inputMargin}
+            style={[styles.inputMargin, { paddingLeft: 40 }]}
+            // textStyle={{ textAlign: "right", flex: 1 }}
             onPress={() => router.push("/sendotp")}
           />
 

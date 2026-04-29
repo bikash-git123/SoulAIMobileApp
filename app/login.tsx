@@ -5,6 +5,7 @@ import { ENDPOINTS } from "@/constants/endpoints";
 import { Colors } from "@/constants/theme";
 import { Typography } from "@/constants/Typography";
 import { apiClient } from "@/utils/api";
+import { AuthService } from "@/utils/auth";
 import { storage } from "@/utils/storage";
 import { toast } from "@/utils/toast";
 import { Feather } from "@expo/vector-icons";
@@ -37,36 +38,28 @@ export default function LoginScreen() {
 
     setIsLoading(true);
 
-    try {
-      const response = await apiClient.post(ENDPOINTS.auth.login, {
-        email: email.trim(),
-        password: password,
-      });
+    const result = await apiClient.post(ENDPOINTS.auth.login, {
+      email: email.trim(),
+      password: password,
+    });
 
-      const data = await response.json();
-
-      if (response.ok) {
-        // Success response
-        // { "success": true, "message": "Login successful", "data": { "access_token": "..." } }
-        await storage.setToken(data.data.access_token);
-        toast.success("Success", data.message || "Login successful");
-        router.replace("/onboarding_one");
-      } else {
-        // Error response
-        // { "detail": { "success": false, "message": "Invalid credentials", "data": null } }
-        const errorMsg =
-          data.detail?.message || data.message || "Login failed. Please check your credentials.";
-        toast.error("Error", errorMsg);
+    if (result.success && result.data) {
+      await storage.setAccessToken(result.data.access_token);
+      if (result.data.refresh_token) {
+        await storage.setRefreshToken(result.data.refresh_token);
       }
-    } catch (error) {
-      console.error("Login Error:", error);
-      toast.error(
-        "Connection Error",
-        "Could not connect to the server. Please check your internet connection.",
-      );
-    } finally {
-      setIsLoading(false);
+
+      const { isAuthenticated, user } = await AuthService.checkAuth();
+      if (isAuthenticated && user) {
+        AuthService.navigateToCorrectScreen(user);
+      } else {
+        router.replace("/onboarding_one");
+      }
+    } else {
+      toast.error("Error", result.message);
     }
+
+    setIsLoading(false);
   };
 
   return (
@@ -134,7 +127,7 @@ export default function LoginScreen() {
           {/* Bottom Link */}
           <View style={styles.bottomLinkContainer}>
             <TouchableOpacity activeOpacity={0.7} onPress={() => router.push("/signup")}>
-              <Text style={styles.bottomLinkText}>Don't have an account? Create one</Text>
+              <Text style={styles.bottomLinkText}>Don’t have an account? Create one</Text>
             </TouchableOpacity>
           </View>
         </ScrollView>

@@ -53,41 +53,22 @@ export default function SignupScreen() {
       return;
     }
 
-    setIsLoading(true);
+    const result = await apiClient.post(ENDPOINTS.auth.register, {
+      email: email.trim(),
+      password: password,
+    });
 
-    try {
-      const response = await apiClient.post(ENDPOINTS.auth.register, {
-        email: email.trim(),
-        password: password,
+    if (result.success) {
+      toast.success("Success", result.message || "OTP sent to your email.");
+      router.push({
+        pathname: "/emailverify",
+        params: { email: email.trim() },
       });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        // Success response
-        // { "success": true, "message": "...", "data": { ... } }
-        toast.success("Success", data.message || "OTP sent to your email.");
-        router.push({
-          pathname: "/emailverify",
-          params: { email: email.trim() },
-        });
-      } else if (response.status === 422) {
-        // Validation error
-        const errorMsg = data.detail?.[0]?.msg || "Validation error";
-        toast.error("Error", errorMsg);
-      } else {
-        // Other errors
-        toast.error("Error", data.message || "Registration failed. Please try again.");
-      }
-    } catch (error) {
-      console.error("Registration Error:", error);
-      toast.error(
-        "Connection Error",
-        "Could not connect to the server. If you are using a physical device, please use your machine's IP address instead of localhost.",
-      );
-    } finally {
-      setIsLoading(false);
+    } else {
+      toast.error("Error", result.message);
     }
+
+    setIsLoading(false);
   };
 
   return (

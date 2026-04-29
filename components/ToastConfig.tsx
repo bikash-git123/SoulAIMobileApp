@@ -1,5 +1,4 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
 import { BaseToast, ErrorToast, ToastConfig as ToastConfigType } from "react-native-toast-message";
 import { Colors } from "@/constants/theme";
 import { Typography } from "@/constants/Typography";
