@@ -17,6 +17,15 @@ export const ENDPOINTS = {
     /** POST — Refresh access token */
     refresh: "/auth/refresh",
 
+    /** POST — Forgot password: send OTP to email (if eligible) */
+    forgotPassword: "/auth/forgot-password",
+
+    /** POST — Reset password using email + OTP */
+    resetPassword: "/auth/reset-password",
+
+    /** POST — Resend OTP to email */
+    resendOtp: "/auth/resend-otp",
+
     /**
      * POST — Exchange a social provider token for an app token.
      * @param provider - "google" | "apple"

@@ -49,6 +49,8 @@ export default function RootLayout() {
           <Stack.Screen name="login" options={{ headerShown: false }} />
           {/* signup screen full screen without the default header */}
           <Stack.Screen name="signup" options={{ headerShown: false }} />
+          <Stack.Screen name="forgot-password" options={{ headerShown: false }} />
+          <Stack.Screen name="reset-password" options={{ headerShown: false }} />
           {/* sendotp screen full screen without the default header */}
           <Stack.Screen name="sendotp" options={{ headerShown: false }} />
           {/* verification screen full screen without the default header */}
