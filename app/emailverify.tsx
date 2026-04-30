@@ -5,6 +5,7 @@ import { Colors } from "@/constants/theme";
 import { Typography } from "@/constants/Typography";
 import { apiClient } from "@/utils/api";
 import { toast } from "@/utils/toast";
+import { useResendOtpCooldown } from "@/hooks/useResendOtpCooldown";
 import { LinearGradient } from "expo-linear-gradient";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
@@ -24,6 +25,14 @@ export default function EmailVerifyScreen() {
   const [otp, setOtp] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  const resolvedEmail = typeof email === "string" ? email : email?.[0] || "";
+
+  const { resend, resendLabel, isDisabled: isResendDisabled } = useResendOtpCooldown({
+    email: resolvedEmail,
+    baseLabel: "Resend Verification Code",
+    disabled: isLoading,
+  });
+
   const handleVerify = async () => {
     if (otp.length < 4) {
       toast.error("Incomplete OTP", "Please enter the 4-digit OTP.");
@@ -31,7 +40,7 @@ export default function EmailVerifyScreen() {
     }
 
     const result = await apiClient.post(ENDPOINTS.auth.verifyOtp, {
-      email: typeof email === "string" ? email : email?.[0] || "",
+      email: resolvedEmail,
       otp: otp,
     });
 
@@ -77,8 +86,13 @@ export default function EmailVerifyScreen() {
           </View>
 
           {/* Resend Link */}
-          <TouchableOpacity activeOpacity={0.7} style={styles.resendContainer}>
-            <Text style={styles.resendText}>Resend Verification Code</Text>
+          <TouchableOpacity
+            activeOpacity={0.7}
+            style={styles.resendContainer}
+            onPress={resend}
+            disabled={isResendDisabled}
+          >
+            <Text style={styles.resendText}>{resendLabel}</Text>
           </TouchableOpacity>
 
           {/* Bottom Re-enter Email Link */}

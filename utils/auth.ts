@@ -74,6 +74,22 @@ async function loginWithSocialToken(provider: SocialProvider, token: string) {
   return { success: false, error: result.message };
 }
 
+async function forgotPassword(email: string) {
+  return apiClient.post<null>(ENDPOINTS.auth.forgotPassword, { email: email.trim() });
+}
+
+async function resetPassword(params: { email: string; otp: string; new_password: string }) {
+  return apiClient.post<null>(ENDPOINTS.auth.resetPassword, {
+    email: params.email.trim(),
+    otp: params.otp,
+    new_password: params.new_password,
+  });
+}
+
+async function resendOtp(email: string) {
+  return apiClient.post<null>(ENDPOINTS.auth.resendOtp, { email: email.trim() });
+}
+
 /**
  * Clears session and redirects to login
  */
@@ -87,5 +103,8 @@ export const AuthService = {
   loginWithSocialToken,
   checkAuth,
   navigateToCorrectScreen,
+  forgotPassword,
+  resetPassword,
+  resendOtp,
   logout,
 };
