@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
 
   /* USED AS TERMS AREA */
   dividerContainer: {
-    marginTop: hp(1),
+    marginTop: normalize(8),
     paddingHorizontal: moderateScale(10),
     alignItems: "center",
   },

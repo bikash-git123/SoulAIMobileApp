@@ -225,7 +225,7 @@ const styles = StyleSheet.create({
     marginBottom: hp(2),
   },
   bottomLinkContainer: {
-    marginTop: hp(4),
+    marginTop: normalize(8),
     alignItems: "center",
   },
   bottomLinkText: {

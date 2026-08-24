@@ -2,7 +2,7 @@ import { AppButton } from "@/components/ui/AppButton";
 import { AuthLoadingModal } from "@/components/ui/AuthLoadingModal";
 import { GoogleIcon } from "@/components/ui/Icons";
 import { useGoogleAuth } from "@/hooks/useGoogleAuth";
-import { normalize } from "@/utils/responsive";
+import { hp, normalize } from "@/utils/responsive";
 import { AntDesign } from "@expo/vector-icons";
 import React from "react";
 import { Platform, StyleProp, StyleSheet, View, ViewStyle } from "react-native";
@@ -50,8 +50,9 @@ const styles = StyleSheet.create({
   container: {
     width: "100%",
     alignItems: "center",
+    marginBottom: normalize(68),
   },
   button: {
-    marginBottom: normalize(12),
+    marginBottom: hp(1),
   },
 });
