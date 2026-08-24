@@ -30,26 +30,45 @@ export function hasGoogleOAuthClientId(): boolean {
 }
 
 // Configure Google Sign-in
-const clientIds = getGoogleOAuthClientIds();
-GoogleSignin.configure({
-  webClientId: clientIds.webClientId,
-  iosClientId: clientIds.iosClientId !== "REPLACE_ME" ? clientIds.iosClientId : undefined,
-  offlineAccess: true,
-});
+export function configureGoogleSignin() {
+  const clientIds = getGoogleOAuthClientIds();
+  GoogleSignin.configure({
+    webClientId: clientIds.webClientId,
+    iosClientId: clientIds.iosClientId !== "REPLACE_ME" ? clientIds.iosClientId : undefined,
+    offlineAccess: true,
+  });
+}
+
+// Initial configuration call
+configureGoogleSignin();
 
 export const useGoogleAuth = () => {
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    configureGoogleSignin();
+  }, []);
 
   const signIn = async () => {
     console.log("[GoogleAuth] Native Sign-In pressed");
     setIsLoading(true);
 
     try {
-      await GoogleSignin.hasPlayServices();
+      configureGoogleSignin();
+
+      if (Platform.OS === "android") {
+        await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
+      }
+
       const response = await GoogleSignin.signIn();
 
+      if (response.type === "cancelled") {
+        console.log("[GoogleAuth] User cancelled sign-in flow");
+        return;
+      }
+
       if (response.type !== "success") {
-        throw new Error("Google Sign-In was not successful or was cancelled.");
+        throw new Error("Google Sign-In was not successful.");
       }
 
       const idToken = response.data.idToken;
