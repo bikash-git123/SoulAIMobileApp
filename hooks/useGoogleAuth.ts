@@ -39,6 +39,7 @@ GoogleSignin.configure({
 
 export const useGoogleAuth = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isAuthenticating, setIsAuthenticating] = useState(false);
 
   const signIn = async () => {
     console.log("[GoogleAuth] Native Sign-In pressed");
@@ -65,6 +66,7 @@ export const useGoogleAuth = () => {
       }
 
       console.log("[GoogleAuth] Native sign-in success, verifying token with backend...");
+      setIsAuthenticating(true);
       await AuthService.loginWithSocialToken("google", idToken);
     } catch (error: any) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
@@ -78,6 +80,7 @@ export const useGoogleAuth = () => {
         toast.error("Auth Error", error.message || "Google Sign-In failed.");
       }
     } finally {
+      setIsAuthenticating(false);
       setIsLoading(false);
     }
   };
@@ -94,6 +97,7 @@ export const useGoogleAuth = () => {
     signIn,
     signOut,
     isLoading,
+    isAuthenticating,
     isReady: true,
   };
 };

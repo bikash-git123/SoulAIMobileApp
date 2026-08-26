@@ -6,6 +6,7 @@ import { Platform } from "react-native";
 
 export const useAppleAuth = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isAuthenticating, setIsAuthenticating] = useState(false);
   const [isAvailable, setIsAvailable] = useState(false);
 
   useEffect(() => {
@@ -44,6 +45,7 @@ export const useAppleAuth = () => {
       }
 
       console.log("[AppleAuth] Native sign-in success, verifying token with backend...");
+      setIsAuthenticating(true);
       await AuthService.loginWithSocialToken("apple", credential.identityToken);
     } catch (error: any) {
       if (
@@ -57,6 +59,7 @@ export const useAppleAuth = () => {
         toast.error("Auth Error", error.message || "Apple Sign-In failed.");
       }
     } finally {
+      setIsAuthenticating(false);
       setIsLoading(false);
     }
   };
@@ -64,6 +67,7 @@ export const useAppleAuth = () => {
   return {
     signIn,
     isLoading,
+    isAuthenticating,
     isAvailable,
   };
 };

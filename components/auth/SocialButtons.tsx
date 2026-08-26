@@ -1,5 +1,4 @@
 import { AppButton } from "@/components/ui/AppButton";
-import { AuthLoadingModal } from "@/components/ui/AuthLoadingModal";
 import { GoogleIcon } from "@/components/ui/Icons";
 import { useAppleAuth } from "@/hooks/useAppleAuth";
 import { useGoogleAuth } from "@/hooks/useGoogleAuth";
@@ -45,7 +44,6 @@ export const SocialButtons = ({ style, buttonStyle }: SocialButtonsProps) => {
         disabled={isAnyLoading}
       />
 
-      <AuthLoadingModal visible={isAnyLoading} provider={isAppleLoading ? "apple" : "google"} />
     </View>
   );
 };
