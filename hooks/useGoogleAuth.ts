@@ -3,7 +3,7 @@ import { toast } from "@/utils/toast";
 import { GoogleSignin, statusCodes } from "@react-native-google-signin/google-signin";
 import Constants from "expo-constants";
 import { Platform } from "react-native";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 type GoogleOAuthClientIds = {
   androidClientId?: string;
@@ -29,36 +29,23 @@ export function hasGoogleOAuthClientId(): boolean {
   return !!ids.webClientId;
 }
 
-// Configure Google Sign-in
-export function configureGoogleSignin() {
-  const clientIds = getGoogleOAuthClientIds();
-  GoogleSignin.configure({
-    webClientId: clientIds.webClientId,
-    iosClientId: clientIds.iosClientId !== "REPLACE_ME" ? clientIds.iosClientId : undefined,
-    offlineAccess: true,
-  });
-}
-
-// Initial configuration call
-configureGoogleSignin();
+// Configure Google Sign-in once at module level (matches therapist app pattern)
+const clientIds = getGoogleOAuthClientIds();
+GoogleSignin.configure({
+  webClientId: clientIds.webClientId,
+  iosClientId: clientIds.iosClientId !== "REPLACE_ME" ? clientIds.iosClientId : undefined,
+  offlineAccess: true,
+});
 
 export const useGoogleAuth = () => {
   const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    configureGoogleSignin();
-  }, []);
 
   const signIn = async () => {
     console.log("[GoogleAuth] Native Sign-In pressed");
     setIsLoading(true);
 
     try {
-      configureGoogleSignin();
-
-      if (Platform.OS === "android") {
-        await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
-      }
+      await GoogleSignin.hasPlayServices();
 
       const response = await GoogleSignin.signIn();
 
