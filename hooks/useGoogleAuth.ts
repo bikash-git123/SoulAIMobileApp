@@ -3,7 +3,7 @@ import { toast } from "@/utils/toast";
 import { GoogleSignin, statusCodes } from "@react-native-google-signin/google-signin";
 import Constants from "expo-constants";
 import { Platform } from "react-native";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 type GoogleOAuthClientIds = {
   androidClientId?: string;
@@ -29,7 +29,7 @@ export function hasGoogleOAuthClientId(): boolean {
   return !!ids.webClientId;
 }
 
-// Configure Google Sign-in
+// Configure Google Sign-in once at module level (matches therapist app pattern)
 const clientIds = getGoogleOAuthClientIds();
 GoogleSignin.configure({
   webClientId: clientIds.webClientId,
@@ -39,6 +39,7 @@ GoogleSignin.configure({
 
 export const useGoogleAuth = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isAuthenticating, setIsAuthenticating] = useState(false);
 
   const signIn = async () => {
     console.log("[GoogleAuth] Native Sign-In pressed");
@@ -46,10 +47,16 @@ export const useGoogleAuth = () => {
 
     try {
       await GoogleSignin.hasPlayServices();
+
       const response = await GoogleSignin.signIn();
 
+      if (response.type === "cancelled") {
+        console.log("[GoogleAuth] User cancelled sign-in flow");
+        return;
+      }
+
       if (response.type !== "success") {
-        throw new Error("Google Sign-In was not successful or was cancelled.");
+        throw new Error("Google Sign-In was not successful.");
       }
 
       const idToken = response.data.idToken;
@@ -59,6 +66,7 @@ export const useGoogleAuth = () => {
       }
 
       console.log("[GoogleAuth] Native sign-in success, verifying token with backend...");
+      setIsAuthenticating(true);
       await AuthService.loginWithSocialToken("google", idToken);
     } catch (error: any) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
@@ -72,6 +80,7 @@ export const useGoogleAuth = () => {
         toast.error("Auth Error", error.message || "Google Sign-In failed.");
       }
     } finally {
+      setIsAuthenticating(false);
       setIsLoading(false);
     }
   };
@@ -88,6 +97,7 @@ export const useGoogleAuth = () => {
     signIn,
     signOut,
     isLoading,
+    isAuthenticating,
     isReady: true,
   };
 };
